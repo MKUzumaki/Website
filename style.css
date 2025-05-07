@@ -181,13 +181,13 @@ span{
 .text-animation{
     font-size: 34px;
     font-weight: 600;
-    min-height: 280;
+    min-width: 280px;
 }
 .text-animation span{
     position: relative;
 }
 .text-animation span::before{
-    content: "Network Engineer";
+    content: "Something";
     color: var(--main-color);
     animation: words 20s infinite;
 }

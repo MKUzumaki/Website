@@ -187,7 +187,7 @@ span{
     position: relative;
 }
 .text-animation span::before{
-    content: "Cyber Security";
+    content: "Cybersecurity Engineer";
     color: var(--main-color);
     animation: words 20s infinite;
 }

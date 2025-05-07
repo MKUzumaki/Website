@@ -178,6 +178,11 @@ span{
     background-color: var(--main-color);
     color: black;
 }
+.text-animation{
+    font-size: 34px;
+    font-weight: 600;
+    min-height: 280;
+}
 .text-animation span{
     position: relative;
 }

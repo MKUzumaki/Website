@@ -395,7 +395,7 @@ span{
 }
 .testimonials .heading{
     margin-bottom: clamp(2rem, 4vw, 6rem);
-    font-size: clamp(3rem, 5vw, 8rem);
+    font-size: clamp(3rem, 10vw, 8rem);
 }
 .testimonials-box img{
     width: 15rem;

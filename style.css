@@ -448,7 +448,7 @@ span{
 .contact{
     background-color: var(--bg-color);
 }
-.contact h2{
+.contact h2, #contact h2 {
     font-size: clamp(3rem, 10vw, 8rem);
     margin-bottom: clamp(2rem, 4vw, 6rem);
     color: white;

@@ -184,8 +184,6 @@ span{
     min-width: 360px;
     white-space: nowrap;
     overflow: hidden;
-    vertical-align: middle;
-    flex: 0 0 auto;
 }
 .text-animation span{
     position: relative;

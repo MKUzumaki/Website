@@ -413,7 +413,8 @@ span{
     background: rgba(0, 0, 0, 0.7);
     border: 3px solid rgba(238, 238, 238, 0.2);
     border-radius: 2rem;
-    margin: 0 2rem;
+    /* margin: 0 2rem; */
+    margin: 0 auto;
     padding: 30px 60px;
     cursor: pointer;
     display: flex;

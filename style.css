@@ -185,7 +185,7 @@ span{
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
-    flex: 0 0 auto;
+    vertical-align: middle;
 }
 .text-animation span{
     position: relative;

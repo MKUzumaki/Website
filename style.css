@@ -344,7 +344,7 @@ span{
 }
 .services-container{
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     align-items: center;
     gap: 2.5rem;
 }
@@ -404,7 +404,7 @@ span{
 }
 .testimonials .wrapper{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
 }
 .testimonial-item{
@@ -535,7 +535,7 @@ span{
     }
     .services-container{
         padding-bottom: 7rem;
-        grid-template-columns: repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
         margin: 0 5rem;
     }
 }
@@ -564,7 +564,7 @@ span{
         padding-bottom: 7rem;
     }
     .testimonials .wrapper{
-        grid-template-columns: repeat(1,1fr);
+        grid-template-columns: repeat(1, 1fr);
     }
     .contact form{
         flex-direction: column;
@@ -622,6 +622,6 @@ span{
         margin-bottom: 3rem;
     }
     .services-container{
-        grid-template-columns: repeat(1,1fr);
+        grid-template-columns: repeat(1, 1fr);
     }
 }

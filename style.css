@@ -185,14 +185,13 @@ span{
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
-    vertical-align: middle;
 }
 .text-animation span{
     position: relative;
     display: inline-block;
 }
 .text-animation span::before{
-    content: "Network Engineer";
+    content: "Cybersecurity Engineer";
     color: var(--main-color);
     animation: words 20s infinite;
 }

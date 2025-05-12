@@ -402,7 +402,7 @@ span{
     border: 3px solid var(--main-color);
     box-shadow: 0 0 25px var(--main-color);
 }
-. .testimonials .wrapper{
+.testimonials .wrapper{
     display: grid;
     grid-template-columns: repeat(3,1fr);
     gap: 3rem;

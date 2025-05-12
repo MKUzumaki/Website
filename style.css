@@ -250,7 +250,8 @@ span{
     background: var(--second-bg-color);
 }
 .education h2{
-    margin-bottom: 5rem;
+    margin-bottom: clamp(2rem, 4vw, 6rem);
+    font-size: clamp(3rem, 10vw, 8rem)
 }
 .timeline-items{
     max-width: 1200px;

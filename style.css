@@ -181,9 +181,10 @@ span{
 .text-animation{
     font-size: 34px;
     font-weight: 600;
-    width: 360px;
+    min-width: 360px;
     white-space: nowrap;
     overflow: hidden;
+    display: inline-block;
 }
 .text-animation span{
     position: relative;

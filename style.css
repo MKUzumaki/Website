@@ -192,7 +192,7 @@ span{
     display: inline-block;
 }
 .text-animation span::before{
-    content: "Cybersecurity Engineer";
+    content: "Cybersec Engineer";
     color: var(--main-color);
     animation: words 20s infinite;
 }
@@ -213,7 +213,7 @@ span{
 }
 @keyframes words{
     0%,20%{content: "Network Engineer";}
-    21%,40%{content: "Cybersecurity Engineer";}
+    21%,40%{content: "Cybersec Engineer";}
     41%,60%{content: "UX/UI Designer";}
     61%,80%{content: "Telecom Engineer";}
     81%,100%{content: "Electronic Engineer";}

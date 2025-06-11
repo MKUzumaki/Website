@@ -250,11 +250,11 @@ span{
     margin: 5rem 0;
 }
 
-.education{
+.journey{
     padding: 100px 15px;
     background: var(--second-bg-color);
 }
-.education h2{
+.journey h2{
     font-size: clamp(3rem, 10vw, 8rem);
     margin-bottom: clamp(2rem, 4vw, 6rem);
 }

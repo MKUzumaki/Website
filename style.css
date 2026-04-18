@@ -22,6 +22,7 @@ html{
 body{
     background: var(--bg-color);
     color: var(--text-color);
+    overflow-x: hidden;
 }
 .header{
     position: fixed;
@@ -38,10 +39,11 @@ body{
 }
 .logo{
     font-size: 3rem;
-     color: var(--text-color);
+    color: var(--text-color);
     font-weight: 800;
-     cursor: pointer;
+    cursor: pointer;
     transition: 0.3s ease;
+    white-space: nowrap;
 }
 .logo:hover{
     transform: scale(1.1);
@@ -123,6 +125,7 @@ span{
     font-weight: 500;
     line-height: 1.8;
     max-width: 1000px;
+    text-align: justify;
 }
 .social-icons a{
     display: inline-flex;
@@ -179,9 +182,9 @@ span{
     color: black;
 }
 .text-animation{
-    font-size: 34px;
+    font-size: clamp(2rem, 6vw, 3.4rem);
     font-weight: 600;
-    min-width: 360px;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     display: inline-block;
@@ -407,6 +410,8 @@ span{
 }
 .testimonials-box img{
     width: 15rem;
+    height: 15rem;
+    object-fit: cover;
     border-radius: 50%;
     border: 3px solid var(--main-color);
     box-shadow: 0 0 25px var(--main-color);
@@ -460,31 +465,49 @@ span{
 }
 .contact form{
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     gap: 3rem;
     margin: 5rem auto;
+    max-width: 120rem;
+    padding: 0 2rem;
     text-align: center;
+}
+.contact form .input-group{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 .contact form .input-box{
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2rem;
+}
+.contact form .input-group-2{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.contact form .input-group-2 textarea{
+    flex: 1;
 }
 .contact form .input-box input,
 .contact form textarea {
     width: 100%;
-    padding: 2.5rem;
+    padding: 2rem 2.5rem;
     font-size: 1.8rem;
     color: var(--text-color);
     background: var(--bg-color);
     border-radius: 2rem;
     border: 2px solid var(--main-color);
-    margin: 1.5rem 0;
+    margin: 0;
     resize: none;
 }
 .contact form .btn{
-    margin-top: 2rem;
+    align-self: center;
+    margin-top: 1rem;
 }
 .footer{
     position: relative;
@@ -549,6 +572,32 @@ span{
         grid-template-columns: repeat(2, 1fr);
         margin: 0 5rem;
     }
+    .home{
+        gap: 8rem;
+    }
+}
+@media (max-width: 1024px){
+    .home{
+        gap: 5rem;
+    }
+    .home-img img{
+        width: 36vw;
+    }
+    .home-content h1{
+        font-size: 6rem;
+    }
+    .home-content p{
+        font-size: 1.5rem;
+    }
+    .testimonials .wrapper{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    section{
+        padding: 10rem 6% 10rem;
+    }
+    .header{
+        padding: 3rem 6%;
+    }
 }
 @media (max-width:991px){
     header{
@@ -556,6 +605,31 @@ span{
     }
     section{
         padding: 10rem 3% 2rem;
+    }
+    .home{
+        flex-direction: column-reverse;
+        gap: 3rem;
+        text-align: center;
+    }
+    .home-content{
+        align-items: center;
+        text-align: center;
+    }
+    .home-img img{
+        width: 45vw;
+        max-width: 320px;
+    }
+    .home-content h1{
+        font-size: 5.5rem;
+    }
+    .home-content p{
+        max-width: 700px;
+    }
+    .social-icons{
+        justify-content: center;
+    }
+    .btn-group{
+        justify-content: center;
     }
     .timeline-item::before{
         left: 7px;
@@ -575,10 +649,29 @@ span{
         padding-bottom: 7rem;
     }
     .testimonials .wrapper{
-        grid-template-columns: repeat(1, 1fr);
+        display: flex;
+        grid-template-columns: none;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 2rem;
+        padding: 1rem 1rem 2rem;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .testimonials .wrapper::-webkit-scrollbar{
+        display: none;
+    }
+    .testimonial-item{
+        flex: 0 0 85%;
+        max-width: 85%;
+        scroll-snap-align: center;
+        min-height: auto;
     }
     .contact form{
         flex-direction: column;
+    }
+    .contact form .input-group-2 textarea{
+        min-height: 18rem;
     }
     .footer{
         padding: 2rem 3%;
@@ -588,51 +681,200 @@ span{
 @media(max-width:895px){
     #menu-icon{
         display: block;
+        cursor: pointer;
     }
     .navbar{
         position: absolute;
         top: 100%;
+        left: 0;
         right: 0;
-        width: 50%;
-        padding: 1rem 3%;
-        background: rgba(0, 0, 0, 0.8);
+        width: 100%;
+        padding: 2rem 4%;
+        background: rgba(0, 0, 0, 0.92);
         backdrop-filter: blur(20px);
-        border-bottom-left-radius: 2rem;
-        border-left: 2px solid var(--main-color);
+        border-top: 2px solid var(--main-color);
         border-bottom: 2px solid var(--main-color);
         display: none;
+        text-align: center;
     }
     .navbar.active{
         display: block;
     }
     .navbar a{
         display: block;
-        font-size: 2rem;
-        margin: 3rem 0;
+        font-size: 1.8rem;
+        margin: 1.5rem 0;
         color: white;
+        padding: 0.5rem 0;
     }
-    .home{
-        flex-direction: column-reverse;
-        margin: 5rem 4rem;
+    .navbar a.active,
+    .navbar a:hover{
+        border-bottom: none;
+        color: var(--main-color);
     }
     .home-content h3{
         font-size: 2.6rem;
     }
     .home-content h1{
-        font-size: 8rem;
-        margin-top: 3rem;
-    }
-    .home-content p{
-        max-width: 600px;
-        margin: 0 auto;
+        font-size: 4.8rem;
     }
     .home-img img{
-        width: 56vw;
+        width: 50vw;
+        max-width: 260px;
     }
     .services h2{
         margin-bottom: 3rem;
     }
     .services-container{
         grid-template-columns: repeat(1, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    html {
+        font-size: 52%;
+    }
+    .header {
+        padding: 2rem 4%;
+    }
+    .logo {
+        font-size: 2.4rem;
+    }
+    section {
+        padding: 8rem 4% 4rem;
+    }
+    .home {
+        gap: 1.5rem;
+        margin: 1rem 0 0;
+    }
+    .home-content h1 {
+        font-size: 3.8rem;
+        margin-top: 0.5rem;
+    }
+    .home-content h3 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+    .home-content p {
+        font-size: 1.4rem;
+        line-height: 1.5;
+    }
+    .home-img img {
+        width: min(38vw, 170px);
+        top: 0;
+    }
+    .social-icons a {
+        margin: 1.2rem 0.8rem 1.2rem 0;
+    }
+    .social-icons a {
+        width: 4rem;
+        height: 4rem;
+        font-size: 2rem;
+        margin: 2rem 1rem 2rem 0;
+    }
+    .btn {
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+    }
+    .btn-group {
+        flex-wrap: wrap;
+    }
+    .heading {
+        font-size: clamp(3rem, 9vw, 5rem);
+        margin: 3rem 0;
+    }
+    .journey {
+        padding: 6rem 4%;
+    }
+    .timeline-content {
+        padding: 2rem 2.5rem;
+        border-radius: 2rem;
+    }
+    .timeline-content h3 {
+        font-size: 1.8rem;
+    }
+    .timeline-content p {
+        font-size: 1.4rem;
+    }
+    .service-box .service-info {
+        padding: 3rem 2.5rem;
+    }
+    .service-info h4 {
+        font-size: 2.4rem;
+    }
+    .service-info p {
+        font-size: 1.5rem;
+    }
+    .testimonial-item {
+        min-height: auto;
+        padding: 3rem 2.5rem;
+    }
+    .testimonials-box img {
+        width: 12rem;
+    }
+    .contact form .input-box input,
+    .contact form textarea {
+        padding: 1.8rem;
+        font-size: 1.6rem;
+    }
+    .footer ul li {
+        padding: 0 8px;
+    }
+    .footer ul {
+        font-size: 16px;
+    }
+}
+@media (max-width: 360px) {
+    html {
+        font-size: 48%;
+    }
+    .header {
+        padding: 1.5rem 3%;
+    }
+    section {
+        padding: 7rem 3% 3rem;
+    }
+    .home-content h1 {
+        font-size: 3.2rem;
+    }
+    .home-content h3 {
+        font-size: 1.8rem;
+    }
+    .home-content p {
+        font-size: 1.3rem;
+    }
+    .home-img img {
+        width: min(48vw, 180px);
+    }
+    section {
+        padding: 6.5rem 3% 2rem;
+    }
+    .social-icons a {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.8rem;
+        margin: 1.5rem 0.8rem 1.5rem 0;
+    }
+    .btn {
+        padding: 0.9rem 1.8rem;
+        font-size: 1.4rem;
+    }
+    .timeline-content {
+        padding: 1.5rem 2rem;
+    }
+    .service-box .service-info {
+        padding: 2.5rem 2rem;
+    }
+    .testimonial-item {
+        padding: 2.5rem 2rem;
+    }
+    .contact form .input-box input,
+    .contact form textarea {
+        padding: 1.5rem;
+        font-size: 1.5rem;
+    }
+    .footer ul li {
+        display: block;
+        padding: 6px 0;
     }
 }

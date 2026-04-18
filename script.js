@@ -95,3 +95,93 @@ if (hireBtn && hireDropdown) {
         if (e.key === 'Escape') closeHireMenu();
     });
 }
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScieinKRzLGrfEvJB0etcYtCUZYgt_AF9jqAcQEIrzI0UFgZw/formResponse';
+    const FIELD_MAP = {
+        fullName: 'entry.905326345',
+        email: 'entry.677081586',
+        phone: 'entry.1756753663',
+        subject: 'entry.294419669',
+        message: 'entry.873234177',
+    };
+    const submitBtn = contactForm.querySelector('input[type="submit"]');
+    const originalBtnValue = submitBtn ? submitBtn.value : 'Send Message';
+
+    const phoneInput = document.getElementById('phoneInput');
+    let iti = null;
+    if (phoneInput && window.intlTelInput) {
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: 'fr',
+            preferredCountries: ['fr', 'kh', 'us', 'gb'],
+            separateDialCode: true,
+            loadUtilsOnInit: 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js',
+            strictMode: true,
+        });
+    }
+
+    const getFullPhone = (rawValue) => {
+        if (!iti) return rawValue.trim();
+        const viaUtils = (iti.getNumber() || '').trim();
+        if (viaUtils) return viaUtils;
+        const national = rawValue.trim();
+        if (!national) return '';
+        const country = iti.getSelectedCountryData();
+        const dial = country && country.dialCode ? country.dialCode : '';
+        return dial ? `+${dial}${national.replace(/\D/g, '')}` : national;
+    };
+
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(contactForm);
+        const rawPhone = (data.get('phone') || '').toString();
+        const fullPhone = getFullPhone(rawPhone);
+        const values = {
+            fullName: (data.get('fullName') || '').toString().trim(),
+            email: (data.get('email') || '').toString().trim(),
+            phone: fullPhone,
+            subject: (data.get('subject') || '').toString().trim(),
+            message: (data.get('message') || '').toString().trim(),
+        };
+
+        if (!values.fullName || !values.email || !values.message) {
+            alert('Please fill in your name, email, and message.');
+            return;
+        }
+        if (iti && phoneInput.value.trim() && typeof iti.isPossibleNumber === 'function' && !iti.isPossibleNumber()) {
+            alert('Please enter a valid phone number for the selected country.');
+            return;
+        }
+
+        const body = new URLSearchParams();
+        for (const [key, entryId] of Object.entries(FIELD_MAP)) {
+            if (values[key]) body.append(entryId, values[key]);
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.value = 'Sending...';
+        }
+
+        try {
+            await fetch(GOOGLE_FORM_ACTION, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString(),
+            });
+            if (submitBtn) submitBtn.value = 'Message Sent!';
+            contactForm.reset();
+        } catch (err) {
+            if (submitBtn) submitBtn.value = 'Error — try again';
+        } finally {
+            setTimeout(() => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.value = originalBtnValue;
+                }
+            }, 3000);
+        }
+    });
+}

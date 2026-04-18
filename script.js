@@ -52,6 +52,139 @@
     frame();
 })();
 
+(() => {
+    const wrapper = document.querySelector('.testimonials .wrapper');
+    if (!wrapper) return;
+
+    const originals = Array.from(wrapper.querySelectorAll('.testimonial-item'));
+    if (originals.length < 2) return;
+
+    const track = document.createElement('div');
+    track.className = 'track';
+    originals.forEach(item => track.appendChild(item));
+    originals.forEach(item => {
+        const clone = item.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+    });
+    wrapper.appendChild(track);
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const SPEED = 120;
+    const RESUME_DELAY = 2500;
+
+    let offset = 0;
+    let halfWidth = 0;
+    let rafId = null;
+    let lastTime = 0;
+    let running = false;
+    let resumeTimer = null;
+
+    const measure = () => {
+        const firstClone = track.children[originals.length];
+        halfWidth = firstClone ? firstClone.offsetLeft - track.children[0].offsetLeft : 0;
+    };
+
+    const apply = () => {
+        track.style.transform = `translate3d(${offset}px, 0, 0)`;
+    };
+
+    const wrap = () => {
+        if (halfWidth <= 0) return;
+        while (offset <= -halfWidth) offset += halfWidth;
+        while (offset > 0) offset -= halfWidth;
+    };
+
+    const tick = (time) => {
+        if (!running) return;
+        if (!lastTime) lastTime = time;
+        const dt = time - lastTime;
+        lastTime = time;
+        offset -= (SPEED * dt) / 1000;
+        wrap();
+        apply();
+        rafId = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+        if (running || reduceMotion.matches || halfWidth <= 0) return;
+        running = true;
+        lastTime = 0;
+        rafId = requestAnimationFrame(tick);
+    };
+
+    const pause = () => {
+        running = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+    };
+
+    const queueResume = () => {
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(start, RESUME_DELAY);
+    };
+
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartOffset = 0;
+    let activePointer = null;
+
+    wrapper.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragging = true;
+        activePointer = e.pointerId;
+        dragStartX = e.clientX;
+        dragStartOffset = offset;
+        pause();
+        wrapper.classList.add('is-dragging');
+        try { wrapper.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+
+    wrapper.addEventListener('pointermove', (e) => {
+        if (!dragging || e.pointerId !== activePointer) return;
+        offset = dragStartOffset + (e.clientX - dragStartX);
+        wrap();
+        apply();
+    });
+
+    const endDrag = (e) => {
+        if (!dragging || e.pointerId !== activePointer) return;
+        dragging = false;
+        activePointer = null;
+        wrapper.classList.remove('is-dragging');
+        try { wrapper.releasePointerCapture(e.pointerId); } catch (_) {}
+        queueResume();
+    };
+    wrapper.addEventListener('pointerup', endDrag);
+    wrapper.addEventListener('pointercancel', endDrag);
+
+    wrapper.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            offset -= e.deltaX;
+            wrap();
+            apply();
+            pause();
+            queueResume();
+        }
+    }, { passive: false });
+
+    wrapper.addEventListener('mouseenter', pause);
+    wrapper.addEventListener('mouseleave', () => { if (!dragging) queueResume(); });
+
+    window.addEventListener('resize', () => {
+        measure();
+        wrap();
+        apply();
+    });
+
+    requestAnimationFrame(() => {
+        measure();
+        apply();
+        setTimeout(start, 300);
+    });
+})();
+
 let menuIcon = document.querySelector("#menu-icon");
 let navbar = document.querySelector(".navbar");
 let sections = document.querySelectorAll("section");

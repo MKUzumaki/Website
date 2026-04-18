@@ -449,17 +449,17 @@ span{
 }
 
 .heading{
-    font-size: 8rem;
+    font-size: 5rem;
     text-align: center;
-    margin: 5rem 0;
+    margin: 4rem 0;
 }
 
 .journey{
     background: rgba(19, 19, 19, 0.72);
 }
 .journey h2{
-    font-size: clamp(3rem, 10vw, 8rem);
-    margin-bottom: clamp(2rem, 4vw, 6rem);
+    font-size: clamp(2.2rem, 6vw, 5rem);
+    margin-bottom: clamp(1.5rem, 3vw, 4rem);
 }
 .timeline-items{
     max-width: 1200px;
@@ -503,35 +503,92 @@ span{
     top: 10px;
 }
 .timeline-date{
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 800;
     color: white;
-    margin: 6px 0 15px;
+    margin: 4px 0 10px;
 }
 .timeline-content{
     background-color: var(--bg-color);
-    border: 3px solid var(--main-color);
-    padding: 30px 50px;
-    border-radius: 4rem;
-    box-shadow: 0 0 10px var(--main-color);
+    border: 2px solid var(--main-color);
+    padding: 18px 28px;
+    border-radius: 2rem;
+    box-shadow: 0 0 8px var(--main-color);
     cursor: pointer;
     transition: 0.3s ease-in-out;
 }
 .timeline-content:hover{
-    transform: scale(1.05);
-    box-shadow: 0 0 25px var(--main-color);
+    transform: scale(1.04);
+    box-shadow: 0 0 18px var(--main-color);
 }
 .timeline-content h3{
-    font-size: 20px;
+    font-size: 16px;
     color: white;
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     font-weight: 500;
 }
 .timeline-content p{
     color: white;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 300;
-    line-height: 22px;
+    line-height: 1.5;
+}
+.timeline-details{
+    margin-top: 1.2rem;
+}
+.timeline-details summary{
+    list-style: none;
+    cursor: pointer;
+    color: var(--main-color);
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.2s ease;
+}
+.timeline-details summary::-webkit-details-marker{
+    display: none;
+}
+.timeline-details summary::after{
+    content: "▾";
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+.timeline-details[open] summary::after{
+    transform: rotate(180deg);
+}
+.timeline-details summary:hover{
+    opacity: 0.75;
+}
+.timeline-details[open] summary{
+    margin-bottom: 0.8rem;
+}
+.timeline-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+.timeline-list li{
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.6rem;
+    color: white;
+    font-size: 12.5px;
+    font-weight: 300;
+    line-height: 1.5;
+}
+.timeline-list li::before{
+    content: "▸";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--main-color);
+    font-size: 14px;
+}
+.timeline-list li:last-child{
+    margin-bottom: 0;
 }
 ::-webkit-scrollbar{
     width: 15px;
@@ -605,8 +662,8 @@ span{
     flex-direction: column;
 }
 .testimonials .heading{
-    margin-bottom: clamp(2rem, 4vw, 6rem);
-    font-size: clamp(3rem, 10vw, 8rem);
+    margin-bottom: clamp(1.5rem, 3vw, 4rem);
+    font-size: clamp(2.2rem, 6vw, 5rem);
 }
 .testimonials-box img{
     width: 15rem;
@@ -699,7 +756,7 @@ span{
     padding: 2rem 2.5rem;
     font-size: 1.8rem;
     color: var(--text-color);
-    background: var(--bg-color);
+    background: #000;
     border-radius: 2rem;
     border: 2px solid var(--main-color);
     margin: 0;
@@ -708,6 +765,76 @@ span{
 .contact form .btn{
     align-self: center;
     margin-top: 1rem;
+}
+.contact form .input-box input:-webkit-autofill,
+.contact form .input-box input:-webkit-autofill:hover,
+.contact form .input-box input:-webkit-autofill:focus,
+.contact form textarea:-webkit-autofill,
+.contact form textarea:-webkit-autofill:hover,
+.contact form textarea:-webkit-autofill:focus{
+    -webkit-text-fill-color: var(--text-color);
+    -webkit-box-shadow: 0 0 0 1000px #000 inset;
+    caret-color: var(--text-color);
+}
+.contact form .iti{
+    width: 100%;
+    display: block;
+}
+.contact form .iti input[type="tel"]{
+    padding-left: 11rem !important;
+    background: #000 !important;
+    color: var(--text-color) !important;
+}
+.contact form .iti input[type="tel"]:-webkit-autofill,
+.contact form .iti input[type="tel"]:-webkit-autofill:hover,
+.contact form .iti input[type="tel"]:-webkit-autofill:focus{
+    -webkit-text-fill-color: var(--text-color);
+    -webkit-box-shadow: 0 0 0 1000px #000 inset;
+    caret-color: var(--text-color);
+}
+.iti--separate-dial-code .iti__selected-flag{
+    background: #000;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-right: 2px solid var(--main-color);
+    padding: 0 1.2rem 0 1.4rem;
+}
+.iti--separate-dial-code .iti__selected-flag:hover,
+.iti--separate-dial-code .iti__selected-flag[aria-expanded="true"]{
+    background: #111;
+}
+.iti__selected-dial-code{
+    color: var(--text-color) !important;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-left: 0.6rem;
+}
+.iti__arrow{
+    border-top-color: var(--text-color);
+}
+.iti__country-list{
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 2px solid var(--main-color);
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    max-height: 28rem;
+}
+.iti__country{
+    padding: 0.8rem 1rem;
+}
+.iti__country.iti__highlight,
+.iti__country:hover{
+    background: rgba(0, 255, 238, 0.12);
+}
+.iti__dial-code{
+    color: var(--main-color);
+}
+.iti__search-input{
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1.5rem;
+    padding: 0.8rem 1rem;
 }
 .footer{
     position: relative;
@@ -980,8 +1107,8 @@ span{
         flex-wrap: wrap;
     }
     .heading {
-        font-size: clamp(3rem, 9vw, 5rem);
-        margin: 3rem 0;
+        font-size: clamp(2.2rem, 7vw, 3.5rem);
+        margin: 2.5rem 0;
     }
     .journey {
         padding: 6rem 4%;

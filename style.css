@@ -942,8 +942,20 @@ span{
     }
     .home{
         flex-direction: column-reverse;
-        gap: 3rem;
+        gap: 1.5rem;
         text-align: center;
+    }
+    .home-content{
+        margin-top: 0;
+    }
+    .text-animation{
+        width: auto;
+        white-space: normal;
+        line-height: 1.4;
+    }
+    .text-animation span{
+        display: block;
+        margin-top: 0.3rem;
     }
     .home-content{
         align-items: center;
@@ -952,6 +964,7 @@ span{
     .home-img img{
         width: 45vw;
         max-width: 320px;
+        margin-top: 3rem;
     }
     .home-content h1{
         font-size: 5.5rem;

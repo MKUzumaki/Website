@@ -1,3 +1,57 @@
+(() => {
+    const canvas = document.getElementById("bg-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const mainColor = getComputedStyle(document.documentElement)
+        .getPropertyValue("--main-color").trim() || "#00ffee";
+    const charSet = "0123456789ABCDEF";
+    const fontSize = 15;
+    let w, h, dpr, cols, drops;
+
+    function randChar() {
+        return charSet[Math.floor(Math.random() * charSet.length)];
+    }
+
+    function resize() {
+        dpr = window.devicePixelRatio || 1;
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.font = `${fontSize}px "Courier New", monospace`;
+        cols = Math.ceil(w / fontSize);
+        drops = Array.from({ length: cols }, () => Math.random() * -h / fontSize);
+    }
+
+    const dropSpeed = 0.3;
+
+    function frame() {
+        ctx.fillStyle = "rgba(8, 8, 8, 0.05)";
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = mainColor;
+        for (let i = 0; i < cols; i++) {
+            const prevRow = Math.floor(drops[i]);
+            drops[i] += dropSpeed;
+            const newRow = Math.floor(drops[i]);
+            if (newRow !== prevRow) {
+                const ch = randChar();
+                const x = i * fontSize;
+                const y = newRow * fontSize;
+                ctx.fillText(ch, x, y);
+                if (y > h && Math.random() > 0.975) drops[i] = 0;
+            }
+        }
+        requestAnimationFrame(frame);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+    frame();
+})();
+
 let menuIcon = document.querySelector("#menu-icon");
 let navbar = document.querySelector(".navbar");
 let sections = document.querySelectorAll("section");

@@ -960,9 +960,6 @@ span{
         display: block;
         margin-top: 0.3rem;
     }
-    .text-animation span::after{
-        display: none;
-    }
     .home-img img{
         width: 45vw;
         max-width: 320px;
@@ -993,23 +990,6 @@ span{
     }
     .timeline-dot{
         left: 0;
-    }
-    .timeline-date{
-        background-color: var(--bg-color);
-        border: 2px solid var(--main-color);
-        border-bottom: none;
-        border-top-left-radius: 2rem;
-        border-top-right-radius: 2rem;
-        box-shadow: 0 0 8px var(--main-color);
-        padding: 14px 28px 0;
-        margin: 0;
-        font-size: 13px;
-    }
-    .timeline-content{
-        border-top: none;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        padding-top: 10px;
     }
     .services{
         padding-bottom: 7rem;
@@ -1227,8 +1207,27 @@ span{
         padding: 0.9rem 1.8rem;
         font-size: 1.4rem;
     }
+    .timeline-item{
+        position: relative;
+    }
+    .timeline-date{
+        position: absolute;
+        top: 1.8rem;
+        left: 5.5rem;
+        right: 2rem;
+        z-index: 2;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--main-color);
+    }
     .timeline-content {
-        padding: 1.5rem 2rem;
+        padding: 4rem 2rem 1.8rem;
     }
     .service-box .service-info {
         padding: 2.5rem 2rem;

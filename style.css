@@ -1164,6 +1164,9 @@ span{
     .contact form .iti input[type="tel"]{
         padding-left: 9rem !important;
     }
+    .iti__selected-dial-code{
+        font-size: 1.6rem !important;
+    }
     .footer ul li {
         padding: 0 8px;
     }

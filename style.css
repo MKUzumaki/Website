@@ -18,6 +18,7 @@
 html{
     font-size: 60%;
     overflow-x: hidden;
+    scroll-padding-top: 11rem;
 }
 body{
     background: var(--bg-color);
@@ -45,7 +46,7 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-    padding: 4rem 12% 4rem;
+    padding: 2.5rem 12%;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     display: flex;
@@ -86,13 +87,14 @@ body{
 }
 section{
     min-height: 100vh;
-    padding: 10rem 12% 10rem;
+    padding: 5rem 12% 5rem;
 }
 .home{
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8rem;
+    padding-top: 9rem;
 }
 .home-content{
     display: flex;
@@ -451,7 +453,7 @@ span{
 .heading{
     font-size: 5rem;
     text-align: center;
-    margin: 4rem 0;
+    margin: 1.5rem 0 3rem;
 }
 
 .journey{
@@ -819,6 +821,8 @@ span{
     border-radius: 1rem;
     font-size: 1.5rem;
     max-height: 28rem;
+    max-width: calc(100vw - 4rem);
+    white-space: normal;
 }
 .iti__country{
     padding: 0.8rem 1rem;
@@ -920,10 +924,10 @@ span{
         grid-template-columns: repeat(2, 1fr);
     }
     section{
-        padding: 10rem 6% 10rem;
+        padding: 5rem 6% 5rem;
     }
     .header{
-        padding: 3rem 6%;
+        padding: 2rem 6%;
     }
 }
 @media (max-width:991px){
@@ -931,7 +935,10 @@ span{
         padding: 2rem 3%;
     }
     section{
-        padding: 10rem 3% 2rem;
+        padding: 5rem 3% 4rem;
+    }
+    .home{
+        padding-top: 8rem;
     }
     .home{
         flex-direction: column-reverse;
@@ -1059,19 +1066,21 @@ span{
 @media (max-width: 600px) {
     html {
         font-size: 52%;
+        scroll-padding-top: 9rem;
     }
     .header {
-        padding: 2rem 4%;
+        padding: 1.5rem 4%;
     }
     .logo {
         font-size: 2.4rem;
     }
     section {
-        padding: 8rem 4% 4rem;
+        padding: 4rem 4% 4rem;
     }
     .home {
         gap: 1.5rem;
         margin: 1rem 0 0;
+        padding-top: 7rem;
     }
     .home-content h1 {
         font-size: 3.8rem;
@@ -1154,12 +1163,16 @@ span{
 @media (max-width: 360px) {
     html {
         font-size: 48%;
+        scroll-padding-top: 8rem;
     }
     .header {
-        padding: 1.5rem 3%;
+        padding: 1.2rem 3%;
     }
     section {
-        padding: 7rem 3% 3rem;
+        padding: 3rem 3% 3rem;
+    }
+    .home {
+        padding-top: 6rem;
     }
     .home-content h1 {
         font-size: 3.2rem;

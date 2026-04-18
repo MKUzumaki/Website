@@ -24,6 +24,7 @@ body{
     background: var(--bg-color);
     color: var(--text-color);
     overflow-x: hidden;
+    min-width: 320px;
 }
 #bg-canvas{
     position: fixed;
@@ -37,9 +38,6 @@ body{
 .header, section, .footer{
     position: relative;
     z-index: 1;
-}
-.header{
-    z-index: 5;
 }
 .header{
     position: fixed;
@@ -620,7 +618,7 @@ span{
 }
 .service-box{
     background-color: var(--main-color);
-    height: 300px;
+    min-height: 260px;
     border-radius: 3rem;
     border: 5px solid transparent;
     cursor: pointer;
@@ -636,10 +634,10 @@ span{
     display: flex;
     flex-direction: column;
     text-align: left;
-    max-height: 200px;
-    justify-content: left;
     align-items: baseline;
-    padding: 5rem 5rem;
+    max-height: 200px;
+    justify-content: flex-start;
+    padding: 5rem;
 }
 .service-info h4{
     font-size: 3rem;
@@ -857,9 +855,9 @@ span{
     font-size: 25px;
     color: var(--main-color);
     border: 2px solid var(--main-color);
-    width: 42px;
-    height: 42px;
-    line-height: 42px;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
     display: inline-block;
     text-align: center;
     border-radius: 50%;
@@ -936,18 +934,22 @@ span{
         padding: 2rem 3%;
     }
     section{
-        padding: 5rem 3% 4rem;
+        padding: 6rem 3% 4rem;
+        min-height: auto;
+    }
+    section .heading{
+        margin: 1rem 0 2rem;
     }
     .home{
         padding-top: 8rem;
-    }
-    .home{
         flex-direction: column-reverse;
         gap: 1.5rem;
         text-align: center;
     }
     .home-content{
         margin-top: 0;
+        align-items: center;
+        text-align: center;
     }
     .text-animation{
         width: auto;
@@ -958,9 +960,8 @@ span{
         display: block;
         margin-top: 0.3rem;
     }
-    .home-content{
-        align-items: center;
-        text-align: center;
+    .text-animation span::after{
+        display: none;
     }
     .home-img img{
         width: 45vw;
@@ -979,7 +980,7 @@ span{
     .btn-group{
         justify-content: center;
     }
-    .timeline-item::before{
+    .timeline-items::before{
         left: 7px;
     }
     .timeline-item:nth-child(odd){
@@ -992,6 +993,23 @@ span{
     }
     .timeline-dot{
         left: 0;
+    }
+    .timeline-date{
+        background-color: var(--bg-color);
+        border: 2px solid var(--main-color);
+        border-bottom: none;
+        border-top-left-radius: 2rem;
+        border-top-right-radius: 2rem;
+        box-shadow: 0 0 8px var(--main-color);
+        padding: 14px 28px 0;
+        margin: 0;
+        font-size: 13px;
+    }
+    .timeline-content{
+        border-top: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        padding-top: 10px;
     }
     .services{
         padding-bottom: 7rem;
@@ -1026,7 +1044,7 @@ span{
 
     }
 }
-@media(max-width:895px){
+@media(max-width:991px){
     #menu-icon{
         display: block;
         cursor: pointer;
@@ -1051,15 +1069,17 @@ span{
     .navbar a{
         display: block;
         font-size: 1.8rem;
-        margin: 1.5rem 0;
+        margin: 1rem 0;
         color: white;
-        padding: 0.5rem 0;
+        padding: 1.2rem 0;
     }
     .navbar a.active,
     .navbar a:hover{
         border-bottom: none;
         color: var(--main-color);
     }
+}
+@media(max-width:895px){
     .home-content h3{
         font-size: 2.6rem;
     }
@@ -1089,7 +1109,7 @@ span{
         font-size: 2.4rem;
     }
     section {
-        padding: 4rem 4% 4rem;
+        padding: 5rem 4% 3rem;
     }
     .home {
         gap: 1.5rem;
@@ -1114,9 +1134,6 @@ span{
         top: 0;
     }
     .social-icons a {
-        margin: 1.2rem 0.8rem 1.2rem 0;
-    }
-    .social-icons a {
         width: 4rem;
         height: 4rem;
         font-size: 2rem;
@@ -1131,10 +1148,7 @@ span{
     }
     .heading {
         font-size: clamp(2.2rem, 7vw, 3.5rem);
-        margin: 2.5rem 0;
-    }
-    .journey {
-        padding: 6rem 4%;
+        margin: 1rem 0 2rem;
     }
     .timeline-content {
         padding: 2rem 2.5rem;
@@ -1167,6 +1181,9 @@ span{
         padding: 1.8rem;
         font-size: 1.6rem;
     }
+    .contact form .iti input[type="tel"]{
+        padding-left: 9rem !important;
+    }
     .footer ul li {
         padding: 0 8px;
     }
@@ -1174,16 +1191,16 @@ span{
         font-size: 16px;
     }
 }
-@media (max-width: 360px) {
+@media (max-width: 430px) {
     html {
-        font-size: 48%;
+        font-size: 50%;
         scroll-padding-top: 5rem;
     }
     .header {
         padding: 1.2rem 3%;
     }
     section {
-        padding: 3rem 3% 3rem;
+        padding: 4rem 3% 2rem;
     }
     .home {
         padding-top: 6rem;
@@ -1200,14 +1217,11 @@ span{
     .home-img img {
         width: min(48vw, 180px);
     }
-    section {
-        padding: 6.5rem 3% 2rem;
-    }
     .social-icons a {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 4.4rem;
+        height: 4.4rem;
         font-size: 1.8rem;
-        margin: 1.5rem 0.8rem 1.5rem 0;
+        margin: 1.2rem 0.8rem 1.2rem 0;
     }
     .btn {
         padding: 0.9rem 1.8rem;

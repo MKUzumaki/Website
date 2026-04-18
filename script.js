@@ -71,10 +71,18 @@ window.onscroll = () => {
         }
     });
 };
-menuIcon.onclick = () => {
-    menuIcon.classList.toggle("bx-x");
-    navbar.classList.toggle("active");
+if (menuIcon) {
+    menuIcon.onclick = () => {
+        menuIcon.classList.toggle("bx-x");
+        navbar.classList.toggle("active");
+    };
 }
+navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+        menuIcon?.classList.remove("bx-x");
+        navbar?.classList.remove("active");
+    });
+});
 const hireBtn = document.getElementById('hireBtn');
 const hireDropdown = hireBtn?.closest('.hire-dropdown');
 if (hireBtn && hireDropdown) {

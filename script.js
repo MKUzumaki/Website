@@ -127,6 +127,17 @@ if (contactForm) {
             loadUtilsOnInit: 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js',
             strictMode: true,
         });
+        phoneInput.addEventListener('input', () => {
+            const cleaned = phoneInput.value.replace(/\D/g, '');
+            if (cleaned !== phoneInput.value) {
+                phoneInput.value = cleaned;
+            }
+        });
+        phoneInput.addEventListener('keypress', (e) => {
+            if (!/[0-9]/.test(e.key) && e.key.length === 1) {
+                e.preventDefault();
+            }
+        });
     }
 
     const getFullPhone = (rawValue) => {
@@ -153,8 +164,16 @@ if (contactForm) {
             message: (data.get('message') || '').toString().trim(),
         };
 
-        if (!values.fullName || !values.email || !values.message) {
-            alert('Please fill in your name, email, and message.');
+        if (!values.fullName || !values.message) {
+            alert('Please fill in your name and message.');
+            return;
+        }
+        if (!values.email && !values.phone) {
+            alert('Please provide an email address or a phone number so I can get back to you.');
+            return;
+        }
+        if (values.email && !values.email.includes('@')) {
+            alert('Please enter a valid email address');
             return;
         }
         if (iti && phoneInput.value.trim() && typeof iti.isPossibleNumber === 'function' && !iti.isPossibleNumber()) {

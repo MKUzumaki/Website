@@ -18,7 +18,7 @@
 html{
     font-size: 60%;
     overflow-x: hidden;
-    scroll-padding-top: 11rem;
+    scroll-padding-top: 8rem;
 }
 body{
     background: var(--bg-color);
@@ -807,8 +807,9 @@ span{
 }
 .iti__selected-dial-code{
     color: var(--text-color) !important;
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-family: "Poppins", sans-serif;
     margin-left: 0.6rem;
 }
 .iti__arrow{
@@ -1079,7 +1080,7 @@ span{
 @media (max-width: 600px) {
     html {
         font-size: 52%;
-        scroll-padding-top: 9rem;
+        scroll-padding-top: 6rem;
     }
     .header {
         padding: 1.5rem 4%;
@@ -1176,7 +1177,7 @@ span{
 @media (max-width: 360px) {
     html {
         font-size: 48%;
-        scroll-padding-top: 8rem;
+        scroll-padding-top: 5rem;
     }
     .header {
         padding: 1.2rem 3%;

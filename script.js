@@ -75,29 +75,23 @@ menuIcon.onclick = () => {
     menuIcon.classList.toggle("bx-x");
     navbar.classList.toggle("active");
 }
-document.getElementById('hireBtn').addEventListener('click', function(e) {
-  e.preventDefault();
-
-  // Let the user choose:
-  const choice = prompt(
-    "How would you like to send your message?\n\n" +
-    "1: Use my mail client (default)\n" +
-    "2: Use Gmail in browser\n\n" +
-    "Type 1 or 2, then OK."
-  );
-
-  if (choice === '2') {
-    // Web-mail: Gmail compose
-    window.open(
-      'https://mail.google.com/mail/?view=cm&fs=1' +
-      '&to=makara.chan@mail.fr' +
-      '&su=' + encodeURIComponent('Hiring Inquiry'),
-      '_blank', 'noopener'
-    );
-  } else {
-    // Default: launch local mail client
-    window.location.href =
-      'mailto:makara.chan@mail.fr' +
-      '?subject=' + encodeURIComponent('Hiring Inquiry');
-  }
-});
+const hireBtn = document.getElementById('hireBtn');
+const hireDropdown = hireBtn?.closest('.hire-dropdown');
+if (hireBtn && hireDropdown) {
+    const closeHireMenu = () => {
+        hireDropdown.classList.remove('open');
+        hireBtn.setAttribute('aria-expanded', 'false');
+    };
+    hireBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = hireDropdown.classList.toggle('open');
+        hireBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+    hireDropdown.querySelector('.hire-close')?.addEventListener('click', closeHireMenu);
+    document.addEventListener('click', (e) => {
+        if (!hireDropdown.contains(e.target)) closeHireMenu();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeHireMenu();
+    });
+}

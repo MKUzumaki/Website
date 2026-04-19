@@ -173,7 +173,9 @@
         if (e.pointerType === 'mouse') pause();
     });
     wrapper.addEventListener('pointerleave', (e) => {
-        if (e.pointerType === 'mouse' && !dragging) queueResume();
+        if (e.pointerType !== 'mouse' || dragging) return;
+        clearTimeout(resumeTimer);
+        start();
     });
 
     window.addEventListener('resize', () => {

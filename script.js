@@ -169,8 +169,12 @@
         }
     }, { passive: false });
 
-    wrapper.addEventListener('mouseenter', pause);
-    wrapper.addEventListener('mouseleave', () => { if (!dragging) queueResume(); });
+    wrapper.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') pause();
+    });
+    wrapper.addEventListener('pointerleave', (e) => {
+        if (e.pointerType === 'mouse' && !dragging) queueResume();
+    });
 
     window.addEventListener('resize', () => {
         measure();

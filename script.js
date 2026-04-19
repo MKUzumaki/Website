@@ -81,9 +81,9 @@
         keyboard: { enabled: true },
         mousewheel: { forceToAxis: true, releaseOnEdges: true, thresholdDelta: 20, thresholdTime: 400 },
         autoplay: {
-            delay: 5500,
+            delay: 4500,
             disableOnInteraction: false,
-            pauseOnMouseEnter: true,
+            pauseOnMouseEnter: false,
         },
         pagination: {
             el: el.querySelector('.journey-pagination'),

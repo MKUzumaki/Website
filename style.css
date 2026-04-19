@@ -628,8 +628,10 @@ span{
     background: transparent;
     opacity: 1;
     color: rgba(255, 255, 255, 0.45);
-    font-size: 1.3rem;
+    font-family: 'SF Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
+    font-size: 1.25rem;
     font-weight: 700;
+    letter-spacing: 0.02rem;
     padding: 0.4rem 0 0.4rem 1.8rem;
     position: relative;
     cursor: pointer;

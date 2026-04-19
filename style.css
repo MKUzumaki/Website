@@ -500,13 +500,22 @@ span{
     background-position: center 30%;
     border: 8px solid white;
     border-bottom-width: 32px;
+    z-index: 2;
+    transition: opacity 0.35s ease, transform 0.5s ease;
+}
+.journey-polaroid--square{
+    width: 17rem;
+    height: 17rem;
+    background-position: center;
     box-shadow:
         0 14px 40px rgba(0, 0, 0, 0.65),
         0 0 0 1px rgba(0, 0, 0, 0.1);
     transform: rotate(-4deg);
-    z-index: 2;
     pointer-events: none;
-    transition: transform 0.5s ease;
+}
+.journey-slide:has(.journey-details[open]) .journey-polaroid{
+    opacity: 0.15;
+    pointer-events: none;
 }
 .swiper-slide-active .journey-polaroid{
     animation: polaroidIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s backwards;
@@ -523,7 +532,7 @@ span{
 }
 .journey-text{
     position: relative;
-    z-index: 2;
+    z-index: 3;
     margin-left: auto;
     width: min(56rem, 60%);
     display: flex;
@@ -724,13 +733,33 @@ span{
     transform: none;
 }
 @media (max-width: 768px){
+    .journey-slide{
+        flex-direction: column;
+        gap: 1.2rem;
+    }
     .journey-polaroid{
+        position: relative;
+        bottom: auto;
+        left: auto;
+        align-self: flex-start;
+        order: 2;
+        margin: auto 0 0.4rem 0.6rem;
+        width: 8rem;
+        height: 11rem;
+        border-width: 4px;
+        border-bottom-width: 14px;
+        transform: rotate(-4deg);
+    }
+    .journey-polaroid--square{
         width: 9rem;
-        height: 13rem;
-        bottom: 1.5rem;
-        left: 1.5rem;
-        border-width: 5px;
-        border-bottom-width: 18px;
+        height: 9rem;
+    }
+    .swiper-slide-active .journey-polaroid{
+        animation: polaroidIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+    }
+    .journey-text{
+        flex: 1;
+        min-height: 0;
     }
     .journey-slider,
     .journey-slider .swiper-wrapper,
@@ -772,7 +801,7 @@ span{
         font-size: 1.25rem;
     }
     .journey-summary{
-        font-size: 1.35rem;
+        display: none;
     }
     .journey-details summary{ font-size: 1.2rem; }
     .journey-details li{ font-size: 1.2rem; }

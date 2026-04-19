@@ -692,31 +692,84 @@ span{
     transform: none;
 }
 @media (max-width: 768px){
+    .journey-slider,
+    .journey-slider .swiper-wrapper,
+    .journey-slider .swiper-slide,
+    .journey-slider .journey-text{
+        touch-action: pan-y !important;
+    }
+    .journey-slider .journey-text{
+        overflow: visible !important;
+        max-height: none !important;
+    }
+    .journey-slider .journey-pagination .swiper-pagination-bullet{
+        pointer-events: none;
+    }
     .journey-slider{
-        height: clamp(52rem, 80vh, 64rem);
+        height: clamp(34rem, 46vh, 42rem);
+        border-radius: 1.6rem;
     }
     .journey-slide{
-        padding: 4rem 2.5rem 6rem;
+        padding: 5rem 8.5rem 5rem 2rem;
+        align-items: flex-start;
+    }
+    .journey-slide::before{
+        background: linear-gradient(180deg, rgba(8, 12, 22, 0.55) 0%, rgba(8, 12, 22, 0.92) 100%);
     }
     .journey-text{
         margin: 0;
         width: 100%;
-    }
-    .journey-pagination{
-        right: 1.5rem;
         gap: 1rem;
     }
+    .journey-year{
+        font-size: 1.3rem;
+        letter-spacing: 0.1rem;
+    }
+    .journey-title{
+        font-size: 2.4rem;
+    }
+    .journey-meta{
+        font-size: 1.25rem;
+    }
+    .journey-summary{
+        font-size: 1.35rem;
+    }
+    .journey-details summary{ font-size: 1.2rem; }
+    .journey-details li{ font-size: 1.2rem; }
+    .journey-pagination{
+        right: 1.4rem;
+        gap: 0.9rem;
+    }
     .journey-pagination .swiper-pagination-bullet{
-        font-size: 1.1rem;
-        padding-left: 1.4rem;
+        font-size: 1.05rem;
+        padding-left: 1.5rem;
+    }
+    .journey-pagination .swiper-pagination-bullet::before{
+        width: 0.7rem;
+        height: 0.7rem;
     }
     .journey-prev,
     .journey-next{
-        right: 1.5rem;
-        font-size: 2.6rem;
+        right: 1.2rem;
+        font-size: 2.4rem;
     }
-    .journey-prev{ top: 1.5rem; }
-    .journey-next{ bottom: 1.5rem; }
+    .journey-prev{ top: 1rem; }
+    .journey-next{ bottom: 1rem; }
+}
+@media (max-width: 430px){
+    .journey-slider{
+        height: clamp(32rem, 48vh, 40rem);
+    }
+    .journey-slide{
+        padding: 4.5rem 7.5rem 4.5rem 1.6rem;
+    }
+    .journey-title{
+        font-size: 2.1rem;
+    }
+    .journey-pagination{
+        right: 1rem;
+        gap: 0.7rem;
+    }
 }
 .timeline-items{
     max-width: 1200px;
@@ -1012,10 +1065,11 @@ span{
     font-size: clamp(2.2rem, 6vw, 5rem);
 }
 .testimonials .wrapper{
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     width: 100%;
     max-width: 120rem;
-    padding: 1rem 0 2rem;
+    padding: 2rem 0 2.5rem;
     touch-action: pan-y;
     user-select: none;
     cursor: grab;

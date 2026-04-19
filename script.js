@@ -73,13 +73,17 @@
         });
     }
 
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
     new Swiper(el, {
         direction: 'vertical',
         loop: true,
         speed: 850,
         slidesPerView: 1,
+        allowTouchMove: !isMobile,
+        simulateTouch: !isMobile,
+        touchStartPreventDefault: false,
         keyboard: { enabled: true },
-        mousewheel: { forceToAxis: true, releaseOnEdges: true, thresholdDelta: 20, thresholdTime: 400 },
+        mousewheel: isMobile ? false : { forceToAxis: true, releaseOnEdges: true, thresholdDelta: 20, thresholdTime: 400 },
         autoplay: {
             delay: 4500,
             disableOnInteraction: false,

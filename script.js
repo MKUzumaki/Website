@@ -1,4 +1,111 @@
 (() => {
+    const el = document.querySelector('.journey-slider');
+    if (!el || typeof Swiper === 'undefined') return;
+
+    const SCRAMBLE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#@&$%';
+    const SCRAMBLE_TARGETS = [
+        { sel: '.journey-year', delay: 50, duration: 450 },
+        { sel: '.journey-title', delay: 200, duration: 750 },
+        { sel: '.journey-meta', delay: 450, duration: 600 },
+        { sel: '.journey-summary', delay: 620, duration: 700 },
+    ];
+
+    el.querySelectorAll('.journey-slide').forEach(slide => {
+        SCRAMBLE_TARGETS.forEach(({ sel }) => {
+            const node = slide.querySelector(sel);
+            if (node && !node.dataset.text) node.dataset.text = node.textContent.trim();
+        });
+    });
+
+    function cancelScramble(node) {
+        if (node._scrambleRaf) {
+            cancelAnimationFrame(node._scrambleRaf);
+            node._scrambleRaf = null;
+        }
+        node.classList.remove('is-scrambling');
+    }
+
+    function scrambleText(node, duration) {
+        cancelScramble(node);
+        const finalText = node.dataset.text || node.textContent;
+        if (!node.dataset.text) node.dataset.text = finalText;
+        const length = finalText.length;
+        const reveals = new Array(length);
+        for (let i = 0; i < length; i++) {
+            reveals[i] = Math.random() * duration * 0.85;
+        }
+        const start = performance.now();
+        node.classList.add('is-scrambling');
+        const tick = (now) => {
+            const elapsed = now - start;
+            let out = '';
+            let done = true;
+            for (let i = 0; i < length; i++) {
+                const ch = finalText[i];
+                if (elapsed >= reveals[i] || ch === ' ' || ch === '\u00A0' || ch === '\n') {
+                    out += ch;
+                } else {
+                    done = false;
+                    out += SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
+                }
+            }
+            node.textContent = out;
+            if (done) {
+                node.textContent = finalText;
+                node._scrambleRaf = null;
+                node.classList.remove('is-scrambling');
+            } else {
+                node._scrambleRaf = requestAnimationFrame(tick);
+            }
+        };
+        node._scrambleRaf = requestAnimationFrame(tick);
+    }
+
+    function animateActive(swiper) {
+        const active = swiper.slides[swiper.activeIndex];
+        if (!active) return;
+        el.querySelectorAll('.journey-text > *').forEach(cancelScramble);
+        SCRAMBLE_TARGETS.forEach(({ sel, delay, duration }) => {
+            const node = active.querySelector(sel);
+            if (!node || !node.dataset.text) return;
+            node.textContent = '';
+            setTimeout(() => scrambleText(node, duration), delay);
+        });
+    }
+
+    new Swiper(el, {
+        direction: 'vertical',
+        loop: true,
+        speed: 850,
+        slidesPerView: 1,
+        keyboard: { enabled: true },
+        mousewheel: { forceToAxis: true, releaseOnEdges: true, thresholdDelta: 20, thresholdTime: 400 },
+        autoplay: {
+            delay: 5500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        pagination: {
+            el: el.querySelector('.journey-pagination'),
+            clickable: true,
+            renderBullet: function (index, className) {
+                const slide = this.slides[index];
+                const year = slide.getAttribute('data-year') || (index + 1);
+                return `<span class="${className}">${year}</span>`;
+            },
+        },
+        navigation: {
+            nextEl: el.querySelector('.journey-next'),
+            prevEl: el.querySelector('.journey-prev'),
+        },
+        on: {
+            init(swiper) { requestAnimationFrame(() => animateActive(swiper)); },
+            slideChangeTransitionStart(swiper) { animateActive(swiper); },
+        },
+    });
+})();
+
+(() => {
     const canvas = document.getElementById("bg-canvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");

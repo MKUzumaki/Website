@@ -1119,21 +1119,21 @@ span{
     color: var(--bg-color);
     border-color: var(--main-color);
 }
-.testimonials{
+.certifications{
     background: rgba(19, 19, 19, 0.72);
 }
-.testimonials-box{
+.certifications-box{
     background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
-.testimonials .heading{
+.certifications .heading{
     margin-bottom: clamp(1.5rem, 3vw, 4rem);
     font-size: clamp(2.2rem, 6vw, 5rem);
 }
-.testimonials .wrapper{
+.certifications .wrapper{
     overflow-x: clip;
     overflow-y: visible;
     width: 100%;
@@ -1143,17 +1143,17 @@ span{
     user-select: none;
     cursor: grab;
 }
-.testimonials .wrapper.is-dragging{
+.certifications .wrapper.is-dragging{
     cursor: grabbing;
 }
-.testimonials .track{
+.certifications .track{
     display: flex;
     gap: 3rem;
     width: max-content;
     will-change: transform;
     padding: 0 1.5rem;
 }
-.testimonial-item{
+.certification-item{
     flex: 0 0 clamp(280px, 85vw, 420px);
     max-width: clamp(280px, 85vw, 420px);
     background: rgba(10, 16, 32, 0.92);
@@ -1165,24 +1165,34 @@ span{
     color: white;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.testimonial-item:hover{
+.certification-item:hover{
     border-color: var(--main-color);
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 0 45px rgba(0, 255, 238, 0.35);
 }
-.testimonial-photo{
+.certification-photo{
     width: 100%;
-    aspect-ratio: 1 / 1;
-    background: #e5e5e5;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, rgba(0, 255, 238, 0.16), rgba(255, 255, 255, 0.04));
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.testimonial-photo img{
+.certification-photo i{
+    font-size: clamp(6rem, 14vw, 10rem);
+    color: var(--main-color);
+    text-shadow: 0 0 30px rgba(0, 255, 238, 0.45);
+}
+.certification-photo img{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
+    padding: 1.4rem;
+    background: #f5f7fb;
 }
-.testimonial-info{
+.certification-info{
     padding: 2.4rem 2.4rem 2.8rem;
     display: flex;
     flex-direction: column;
@@ -1190,27 +1200,25 @@ span{
     text-align: center;
     gap: 1.2rem;
 }
-.testimonial-item h2{
+.certification-item h2{
     font-size: 2.4rem;
     font-weight: 700;
     line-height: 1.2;
 }
-.testimonial-info .rating{
-    display: flex;
-    gap: 0.4rem;
+.certification-info .certification-issuer{
+    color: var(--main-color);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
     padding-bottom: 1.2rem;
     border-bottom: 1px solid rgba(238, 238, 238, 0.12);
     width: 100%;
-    justify-content: center;
 }
-.testimonial-item p{
+.certification-item p{
     font-size: 1.4rem;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.8);
-}
-.star{
-    color: gold;
-    font-size: 2rem;
 }
 .contact{
     background-color: transparent;
@@ -1491,7 +1499,7 @@ span{
     .services{
         padding-bottom: 7rem;
     }
-    .testimonials .wrapper{
+    .certifications .wrapper{
         gap: 2rem;
         padding: 1rem 1rem 2rem;
     }
@@ -1631,10 +1639,10 @@ span{
     .service-info p {
         font-size: 1.5rem;
     }
-    .testimonial-info {
+    .certification-info {
         padding: 2rem 1.8rem 2.4rem;
     }
-    .testimonial-item h2 {
+    .certification-item h2 {
         font-size: 2.2rem;
     }
     .contact form .input-box input,
@@ -1716,7 +1724,7 @@ span{
     .service-box .service-info {
         padding: 2.5rem 2rem;
     }
-    .testimonial-info {
+    .certification-info {
         padding: 1.8rem 1.5rem 2.2rem;
         gap: 1rem;
     }

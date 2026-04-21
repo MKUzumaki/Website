@@ -164,10 +164,10 @@
 })();
 
 (() => {
-    const wrapper = document.querySelector('.testimonials .wrapper');
+    const wrapper = document.querySelector('.certifications .wrapper');
     if (!wrapper) return;
 
-    const originals = Array.from(wrapper.querySelectorAll('.testimonial-item'));
+    const originals = Array.from(wrapper.querySelectorAll('.certification-item'));
     if (originals.length < 2) return;
 
     const track = document.createElement('div');

@@ -302,6 +302,99 @@
     });
 })();
 
+/* ==========================================================================
+   3D LAYER
+   Three effects that share one rule: they are decoration, so they only ever
+   run when the device can spare the frames. Every one of them degrades to
+   the flat layout rather than to a broken one.
+   ========================================================================== */
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+// Coarse pointer = finger. Tilt needs a hovering cursor to make any sense,
+// and phones are where dropped frames actually hurt.
+const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+/* --- Card tilt -----------------------------------------------------------
+   Cards rotate toward the pointer and a specular glare tracks across them.
+   Pointer position is read on the event but written on the next animation
+   frame, so a fast mouse can't force more style writes than the screen can
+   actually draw.                                                          */
+(() => {
+    const cards = document.querySelectorAll('.project-card');
+    if (!cards.length || !hasFinePointer.matches || prefersReducedMotion.matches) return;
+
+    const MAX_TILT = 9; // degrees; past ~12 it starts to look like a gimmick
+
+    cards.forEach((card) => {
+        let frame = null;
+        let pending = null;
+
+        const paint = () => {
+            frame = null;
+            if (!pending) return;
+            const { x, y, rect } = pending;
+            const px = x / rect.width;   // 0 = left edge, 1 = right edge
+            const py = y / rect.height;
+            card.style.setProperty('--ry', `${(px - 0.5) * 2 * MAX_TILT}deg`);
+            card.style.setProperty('--rx', `${(0.5 - py) * 2 * MAX_TILT}deg`);
+            card.style.setProperty('--mx', `${px * 100}%`);
+            card.style.setProperty('--my', `${py * 100}%`);
+        };
+
+        card.addEventListener('pointermove', (e) => {
+            if (e.pointerType !== 'mouse') return;
+            const rect = card.getBoundingClientRect();
+            pending = { x: e.clientX - rect.left, y: e.clientY - rect.top, rect };
+            if (!frame) frame = requestAnimationFrame(paint);
+        });
+
+        card.addEventListener('pointerenter', (e) => {
+            if (e.pointerType === 'mouse') card.classList.add('is-tilting');
+        });
+
+        card.addEventListener('pointerleave', () => {
+            if (frame) cancelAnimationFrame(frame);
+            frame = null;
+            pending = null;
+            // Drop the class first so the CSS transition eases it back to flat.
+            card.classList.remove('is-tilting');
+            card.style.setProperty('--rx', '0deg');
+            card.style.setProperty('--ry', '0deg');
+        });
+    });
+})();
+
+/* --- Hero parallax -------------------------------------------------------
+   Portrait and text drift at different rates as the hero scrolls away,
+   which reads as depth. Values are written as CSS custom properties so the
+   transforms themselves stay declared in the stylesheet.                  */
+(() => {
+    const home = document.querySelector('.home');
+    const content = document.querySelector('.home-content');
+    const img = document.querySelector('.home-img');
+    if (!home || !content || !img || prefersReducedMotion.matches) return;
+
+    let frame = null;
+
+    const update = () => {
+        frame = null;
+        const rect = home.getBoundingClientRect();
+        if (rect.bottom < 0) return; // hero is off-screen; nothing to move
+        // 0 while the hero is in place, growing as it scrolls out of view.
+        const progress = Math.min(Math.max(-rect.top / window.innerHeight, 0), 1);
+        content.style.setProperty('--parallax-text', `${progress * 40}px`);
+        img.style.setProperty('--parallax-img', `${progress * -55}px`);
+    };
+
+    const onScroll = () => {
+        if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+})();
+
 let menuIcon = document.querySelector("#menu-icon");
 let navbar = document.querySelector(".navbar");
 let sections = document.querySelectorAll("section");
@@ -369,14 +462,9 @@ if (contactForm) {
 
     const phoneInput = document.getElementById('phoneInput');
     let iti = null;
-    if (phoneInput && window.intlTelInput) {
-        iti = window.intlTelInput(phoneInput, {
-            initialCountry: 'fr',
-            preferredCountries: ['fr', 'kh', 'us', 'gb'],
-            separateDialCode: true,
-            loadUtilsOnInit: 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js',
-            strictMode: true,
-        });
+
+    if (phoneInput) {
+        // Digit-only typing works with or without the library.
         phoneInput.addEventListener('input', () => {
             const cleaned = phoneInput.value.replace(/\D/g, '');
             if (cleaned !== phoneInput.value) {
@@ -388,6 +476,53 @@ if (contactForm) {
                 e.preventDefault();
             }
         });
+    }
+
+    // intl-tel-input costs ~306 KB (library + utils) to serve one field at the
+    // very bottom of the page. Loading it in <head> delayed first paint for
+    // every visitor, so it is fetched during idle time instead — or straight
+    // away if the visitor reaches the field before the browser goes idle.
+    const ITI_BASE = 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build';
+    let itiRequest = null;
+    const loadIntlTelInput = () => itiRequest || (itiRequest = new Promise((resolve, reject) => {
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = `${ITI_BASE}/css/intlTelInput.css`;
+        document.head.appendChild(css);
+
+        const js = document.createElement('script');
+        js.src = `${ITI_BASE}/js/intlTelInput.min.js`;
+        js.onload = resolve;
+        js.onerror = reject;
+        document.head.appendChild(js);
+    }));
+
+    let phoneSetupStarted = false;
+    const setupPhoneField = async () => {
+        if (phoneSetupStarted || !phoneInput) return;
+        phoneSetupStarted = true;
+        try {
+            await loadIntlTelInput();
+        } catch {
+            return; // CDN unreachable — the plain tel input still submits fine.
+        }
+        if (!window.intlTelInput) return;
+        const hadFocus = document.activeElement === phoneInput;
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: 'fr',
+            preferredCountries: ['fr', 'kh', 'us', 'gb'],
+            separateDialCode: true,
+            loadUtilsOnInit: `${ITI_BASE}/js/utils.js`,
+            strictMode: true,
+        });
+        // Wrapping the input in .iti can drop focus; hand it back if we took it.
+        if (hadFocus) phoneInput.focus();
+    };
+
+    if (phoneInput) {
+        phoneInput.addEventListener('focus', setupPhoneField, { once: true });
+        const whenIdle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+        whenIdle(() => setupPhoneField());
     }
 
     const getFullPhone = (rawValue) => {
@@ -462,3 +597,209 @@ if (contactForm) {
         }
     });
 }
+
+/* ==========================================================================
+   ORBIT GLOBE  ·  WebGL, lazy, optional
+   A wireframe globe with travelling data arcs, drawn around the portrait.
+
+   Three.js is ~160 KB gzipped, so it is never part of the initial page load.
+   It is fetched only when ALL of these hold:
+     · the viewport is desktop-sized      (phones skip it entirely)
+     · the visitor has not asked for reduced motion
+     · the browser actually reports a WebGL context
+     · the hero is on screen              (no point paying for it otherwise)
+   If any check fails, or the CDN is down, the canvas simply stays invisible
+   and the hero looks exactly as it did before.
+   ========================================================================== */
+(() => {
+    const canvas = document.querySelector('.orbit-canvas');
+    if (!canvas) return;
+    if (prefersReducedMotion.matches) return;
+    if (!window.matchMedia('(min-width: 992px)').matches) return;
+
+    // Cheap capability probe — cheaper than downloading Three.js to find out.
+    try {
+        const probe = document.createElement('canvas');
+        if (!probe.getContext('webgl2') && !probe.getContext('webgl')) return;
+    } catch { return; }
+
+    const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+    const accent = getComputedStyle(document.documentElement)
+        .getPropertyValue('--main-color').trim() || '#00ffee';
+
+    let started = false;
+
+    const start = async () => {
+        if (started) return;
+        started = true;
+
+        let THREE;
+        try {
+            THREE = await import(THREE_URL);
+        } catch {
+            return; // offline or blocked — hero stays flat, no error surfaced
+        }
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+        camera.position.z = 3.2;
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas,
+            alpha: true,
+            antialias: true,
+            powerPreference: 'low-power',
+        });
+        renderer.setClearColor(0x000000, 0);
+
+        const globe = new THREE.Group();
+        scene.add(globe);
+
+        const color = new THREE.Color(accent);
+        const R = 1;
+
+        // --- surface points, spread evenly with a Fibonacci sphere ---------
+        const COUNT = 900;
+        const positions = new Float32Array(COUNT * 3);
+        const golden = Math.PI * (3 - Math.sqrt(5));
+        for (let i = 0; i < COUNT; i++) {
+            const y = 1 - (i / (COUNT - 1)) * 2;
+            const radius = Math.sqrt(Math.max(0, 1 - y * y));
+            const theta = golden * i;
+            positions[i * 3] = Math.cos(theta) * radius * R;
+            positions[i * 3 + 1] = y * R;
+            positions[i * 3 + 2] = Math.sin(theta) * radius * R;
+        }
+        const dotGeo = new THREE.BufferGeometry();
+        dotGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        globe.add(new THREE.Points(dotGeo, new THREE.PointsMaterial({
+            color,
+            size: 0.018,
+            transparent: true,
+            opacity: 0.85,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        })));
+
+        // --- faint wireframe shell so the sphere reads as solid ------------
+        globe.add(new THREE.LineSegments(
+            new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(R * 0.995, 3)),
+            new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.08 })
+        ));
+
+        // --- three tilted orbit rings --------------------------------------
+        // Radii are capped at ~1.21R so the widest ring still clears the
+        // camera frustum; any larger and the rings get sliced by the canvas.
+        [[0.15, 0.4], [1.1, -0.3], [-0.9, 0.8]].forEach(([rx, rz], i) => {
+            const ring = new THREE.Mesh(
+                new THREE.TorusGeometry(R * (1.05 + i * 0.08), 0.0035, 8, 180),
+                new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.3 })
+            );
+            ring.rotation.set(rx, 0, rz);
+            globe.add(ring);
+        });
+
+        // --- data arcs with a packet travelling along each ------------------
+        const surfacePoint = () => {
+            const u = Math.random() * Math.PI * 2;
+            const v = Math.acos(2 * Math.random() - 1);
+            return new THREE.Vector3(
+                Math.sin(v) * Math.cos(u), Math.cos(v), Math.sin(v) * Math.sin(u)
+            ).multiplyScalar(R);
+        };
+
+        const arcs = [];
+        for (let i = 0; i < 7; i++) {
+            const a = surfacePoint();
+            const b = surfacePoint();
+            // Lift the control point off the surface so the arc bows outward.
+            const mid = a.clone().add(b).multiplyScalar(0.5)
+                .normalize().multiplyScalar(R + 0.24 + Math.random() * 0.14);
+            const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+
+            globe.add(new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(curve.getPoints(60)),
+                new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.28 })
+            ));
+
+            const packet = new THREE.Mesh(
+                new THREE.SphereGeometry(0.022, 10, 10),
+                new THREE.MeshBasicMaterial({
+                    color, transparent: true, blending: THREE.AdditiveBlending,
+                })
+            );
+            globe.add(packet);
+            arcs.push({ curve, packet, t: Math.random(), speed: 0.11 + Math.random() * 0.13 });
+        }
+
+        // --- sizing ---------------------------------------------------------
+        const resize = () => {
+            const size = canvas.clientWidth;
+            if (!size) return;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setSize(size, size, false);
+            camera.aspect = 1;
+            camera.updateProjectionMatrix();
+        };
+        resize();
+        new ResizeObserver(resize).observe(canvas);
+
+        // --- pointer influence ----------------------------------------------
+        let targetX = 0, targetY = 0, curX = 0, curY = 0;
+        window.addEventListener('pointermove', (e) => {
+            if (e.pointerType !== 'mouse') return;
+            targetX = (e.clientX / window.innerWidth - 0.5) * 0.55;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 0.35;
+        }, { passive: true });
+
+        // --- render loop, paused whenever the hero is off screen -------------
+        let visible = true;
+        let raf = null;
+        let last = performance.now();
+
+        const frame = (now) => {
+            raf = requestAnimationFrame(frame);
+            const dt = Math.min((now - last) / 1000, 0.05);
+            last = now;
+
+            globe.rotation.y += dt * 0.12;
+            curX += (targetX - curX) * 0.05;
+            curY += (targetY - curY) * 0.05;
+            globe.rotation.x = curY;
+            globe.position.x = curX * 0.12;
+
+            for (const arc of arcs) {
+                arc.t = (arc.t + dt * arc.speed) % 1;
+                arc.curve.getPoint(arc.t, arc.packet.position);
+                // Fade in and out at the ends so packets don't pop.
+                arc.packet.material.opacity = Math.sin(arc.t * Math.PI);
+            }
+            renderer.render(scene, camera);
+        };
+
+        const play = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+        const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = null; } };
+
+        new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+            visible ? play() : stop();
+        }, { threshold: 0 }).observe(canvas);
+
+        document.addEventListener('visibilitychange', () => {
+            document.hidden || !visible ? stop() : play();
+        });
+
+        canvas.classList.add('is-live');
+        play();
+    };
+
+    // Only pay for it once the hero is actually on screen, and never before
+    // the browser has finished the work that matters.
+    const watcher = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        watcher.disconnect();
+        const whenIdle = window.requestIdleCallback || ((fn) => setTimeout(fn, 400));
+        whenIdle(() => start());
+    }, { threshold: 0 });
+    watcher.observe(canvas);
+})();

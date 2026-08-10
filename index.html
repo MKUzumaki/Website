@@ -1,16 +1,26 @@
 <!DOCTYPE html>
- <html lang="en">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Makara CHAN</title>
-     <link rel="stylesheet" href="style.css">
-     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
- </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makara CHAN</title>
+    <meta name="description" content="Makara CHAN — Cybersecurity, Information Systems and Governance student at EFREI, looking for a work-study program in cyber defense.">
 
- <body>
+    <!-- Warm up the CDN connections before the stylesheets below need them. -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <!-- Scripts download in parallel with parsing and run in order once the DOM is ready.
+         intl-tel-input is not here on purpose — script.js loads it lazily. -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <header class= "header">
         <a href="#home" class="logo">Makara
@@ -99,6 +109,10 @@
             </div>
         </div>
             <div class="home-img">
+                <!-- WebGL globe drawn around the portrait. script.js only powers
+                     this up on devices that can afford it; otherwise it stays
+                     blank and the page looks exactly as it did before. -->
+                <canvas class="orbit-canvas" aria-hidden="true"></canvas>
                 <img src="Picture/image.jpg" alt="Portrait of Makara CHAN" class="jpg">
             </div>
     </section>
@@ -242,6 +256,7 @@
 
         <div class="services-container">
             <article class="project-card">
+                <a href="projects/cyber-security.html" class="project-card-link" aria-label="Open Cyber Security project page"></a>
                 <h4 class="project-title">Cyber Security</h4>
                 <p class="project-desc">Hardening systems and analyzing threats to keep infrastructure, data, and users safe from real-world attacks.</p>
                 <div class="project-tags">
@@ -255,6 +270,7 @@
             </article>
 
             <article class="project-card">
+                <a href="projects/networking.html" class="project-card-link" aria-label="Open Networking project page"></a>
                 <h4 class="project-title">Networking</h4>
                 <p class="project-desc">Designing and maintaining reliable network infrastructure, from fiber optics to QoS tuning, for uninterrupted connectivity.</p>
                 <div class="project-tags">
@@ -268,6 +284,7 @@
             </article>
 
             <article class="project-card">
+                <a href="projects/ethical-hacking.html" class="project-card-link" aria-label="Open Ethical Hacking project page"></a>
                 <h4 class="project-title">Ethical Hacking</h4>
                 <p class="project-desc">Probing applications and networks through penetration testing to find weaknesses before attackers do.</p>
                 <div class="project-tags">
@@ -281,6 +298,7 @@
             </article>
 
             <article class="project-card">
+                <a href="projects/data-management.html" class="project-card-link" aria-label="Open Data Management project page"></a>
                 <h4 class="project-title">Data Management</h4>
                 <p class="project-desc">Structuring, securing, and governing data so it stays accurate, accessible, and compliant across its lifecycle.</p>
                 <div class="project-tags">
@@ -294,6 +312,7 @@
             </article>
 
             <article class="project-card">
+                <a href="projects/ux-ui-design.html" class="project-card-link" aria-label="Open UX/UI Design project page"></a>
                 <h4 class="project-title">UX/UI Design</h4>
                 <p class="project-desc">Crafting clean, intuitive interfaces that turn complex workflows into experiences people actually enjoy using.</p>
                 <div class="project-tags">
@@ -307,6 +326,7 @@
             </article>
 
             <article class="project-card">
+                <a href="projects/electronics.html" class="project-card-link" aria-label="Open Electronics project page"></a>
                 <h4 class="project-title">Electronics</h4>
                 <p class="project-desc">Prototyping circuits and embedded systems, bridging software and hardware to bring ideas into the physical world.</p>
                 <div class="project-tags">
@@ -419,16 +439,5 @@
             © Makara CHAN | All Rights Reserved
         </p>
     </footer>
-    
-
-
-
-
-
-
-
-     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-     <script src="script.js"></script>
- </body>
- </html>
+</body>
+</html>

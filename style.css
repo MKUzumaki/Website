@@ -1877,3 +1877,14 @@ span{
         display: none;
     }
 }
+
+/*  Honeypot ---------------------------------------------------------------
+    Moved off-screen rather than display:none — some bots skip fields that are
+    explicitly hidden, and the whole point is that they should fill this one in.  */
+.hp-field{
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

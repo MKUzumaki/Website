@@ -421,6 +421,15 @@
                 </div>
             </div>
 
+            <!-- Honeypot. Hidden from people and from screen readers, but a bot
+                 filling every field it finds will complete it and give itself away.
+                 Deliberately NOT named something like "website" or "url" — password
+                 managers autofill those, which would flag real visitors as bots.
+                 "_gotcha" is also the name Formspree discards server-side. -->
+            <div class="hp-field" aria-hidden="true">
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+            </div>
+
             <div class="input-group-2">
                 <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
                 <input type="submit" value="Send Message" class="btn">

@@ -571,9 +571,38 @@ if (contactForm) {
         return dial ? `+${dial}${national.replace(/\D/g, '')}` : national;
     };
 
+    // Bots submit the instant they finish parsing the page. A person has to read
+    // the fields and type, which takes seconds at the very least.
+    const formReadyAt = Date.now();
+    const MIN_FILL_MS = 3000;
+
+    // Shown to bots so they record a success and move on.
+    const fakeSuccess = () => {
+        contactForm.reset();
+        if (!submitBtn) return;
+        submitBtn.value = 'Message Sent!';
+        setTimeout(() => { submitBtn.value = originalBtnValue; }, 3000);
+    };
+
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const data = new FormData(contactForm);
+
+        // A filled honeypot means a bot. Report success and drop the message,
+        // so it never learns which check caught it.
+        if ((data.get('_gotcha') || '').toString().trim() !== '') {
+            fakeSuccess();
+            return;
+        }
+        // The speed check is softer: a real visitor could conceivably beat the
+        // clock, and silently binning a genuine message is far worse than
+        // letting a determined bot through. So this one asks them to retry —
+        // by which point the timer has passed anyway.
+        if (Date.now() - formReadyAt < MIN_FILL_MS) {
+            alert('That was quick — please take a moment to check your message, then send again.');
+            return;
+        }
+
         const rawPhone = (data.get('phone') || '').toString();
         const fullPhone = getFullPhone(rawPhone);
         const values = {

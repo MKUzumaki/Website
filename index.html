@@ -6,17 +6,40 @@
     <title>Makara CHAN</title>
     <meta name="description" content="Makara CHAN — Cybersecurity, Information Systems and Governance student at EFREI, looking for a work-study program in cyber defense.">
 
+    <!-- Only these origins may serve code to this page. Inline scripts are not
+         allowed at all, so an injected <script> tag cannot execute. -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://cdn.jsdelivr.net;
+        style-src 'self' https://cdn.jsdelivr.net https://unpkg.com 'unsafe-inline';
+        font-src 'self' https://unpkg.com https://cdn.jsdelivr.net data:;
+        img-src 'self' https://cdn.jsdelivr.net data:;
+        connect-src 'self' https://cdn.jsdelivr.net https://docs.google.com;
+        form-action 'self' https://docs.google.com;
+        base-uri 'self';
+        object-src 'none';
+        frame-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
     <!-- Warm up the CDN connections before the stylesheets below need them. -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
     <link rel="stylesheet" href="style.css">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"
+          integrity="sha384-42kyIPf7HDYLkGffmxDhSx/3Z/53wGBs3nD6wEFxsbeDc7rMO6mkYbkAcpRsnMU2"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
+          integrity="sha384-gAPqlBuTCdtVcYt9ocMOYWrnBZ4XSL6q+4eXqwNycOr4iFczhNKtnYhF3NEXJM51"
+          crossorigin="anonymous">
 
     <!-- Scripts download in parallel with parsing and run in order once the DOM is ready.
-         intl-tel-input is not here on purpose — script.js loads it lazily. -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+         intl-tel-input is not here on purpose — script.js loads it lazily.
+         Versions are pinned exactly and hash-checked: if the CDN ever serves a
+         modified file, the browser refuses to run it. -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
+            integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
+            crossorigin="anonymous" defer></script>
     <script src="script.js" defer></script>
 </head>
 

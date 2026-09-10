@@ -173,27 +173,54 @@
     const track = document.createElement('div');
     track.className = 'track';
     originals.forEach(item => track.appendChild(item));
-    originals.forEach(item => {
-        const clone = item.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        track.appendChild(clone);
-    });
     wrapper.appendChild(track);
+
+    const appendSet = () => {
+        originals.forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            track.appendChild(clone);
+        });
+    };
+
+    // Width of one full set of cards, measured from the live layout rather than
+    // assumed — the cards are clamp()-sized, so it changes with the viewport.
+    const setWidth = () => {
+        const first = track.children[0];
+        const nextSet = track.children[originals.length];
+        return nextSet ? nextSet.offsetLeft - first.offsetLeft : 0;
+    };
+
+    // The marquee jumps back by exactly one set, so at the instant it wraps the
+    // track still has to fill the screen from that point on. Two sets only
+    // manage that while the viewport is narrower than one set — on anything
+    // wider the tail runs out and a blank gap trails the last card. Clone until
+    // the track is at least one set wider than the wrapper, and re-check on
+    // resize, since a window drag can invalidate the count either way.
+    const ensureCoverage = () => {
+        if (track.children.length < originals.length * 2) appendSet();
+        for (let guard = 0; guard < 16; guard++) {
+            const set = setWidth();
+            if (set <= 0) break;
+            if (track.scrollWidth >= set + wrapper.clientWidth) break;
+            appendSet();
+        }
+    };
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const SPEED = 120;
     const RESUME_DELAY = 2500;
 
     let offset = 0;
-    let halfWidth = 0;
+    let wrapWidth = 0;
     let rafId = null;
     let lastTime = 0;
     let running = false;
     let resumeTimer = null;
 
     const measure = () => {
-        const firstClone = track.children[originals.length];
-        halfWidth = firstClone ? firstClone.offsetLeft - track.children[0].offsetLeft : 0;
+        ensureCoverage();
+        wrapWidth = setWidth();
     };
 
     const apply = () => {
@@ -201,9 +228,9 @@
     };
 
     const wrap = () => {
-        if (halfWidth <= 0) return;
-        while (offset <= -halfWidth) offset += halfWidth;
-        while (offset > 0) offset -= halfWidth;
+        if (wrapWidth <= 0) return;
+        while (offset <= -wrapWidth) offset += wrapWidth;
+        while (offset > 0) offset -= wrapWidth;
     };
 
     const tick = (time) => {
@@ -218,7 +245,7 @@
     };
 
     const start = () => {
-        if (running || reduceMotion.matches || halfWidth <= 0) return;
+        if (running || reduceMotion.matches || wrapWidth <= 0) return;
         running = true;
         lastTime = 0;
         rafId = requestAnimationFrame(tick);
@@ -483,15 +510,23 @@ if (contactForm) {
     // every visitor, so it is fetched during idle time instead — or straight
     // away if the visitor reaches the field before the browser goes idle.
     const ITI_BASE = 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build';
+    // Subresource-integrity hashes for the two files above. The browser compares
+    // these against what the CDN actually sends and drops the file on mismatch.
+    const ITI_CSS_SRI = 'sha384-dtmSEPuKDExMe4jB/GN1CLwChZhgGsg8FrOtj405iysBoklNdIsyVGDeWutzRVCC';
+    const ITI_JS_SRI = 'sha384-OZQ1o4We0ngHtt5igyGKBTnGpO8gc2b9UXq0whXBburiBwtpVJNZrC3KqqvHAruo';
     let itiRequest = null;
     const loadIntlTelInput = () => itiRequest || (itiRequest = new Promise((resolve, reject) => {
         const css = document.createElement('link');
         css.rel = 'stylesheet';
         css.href = `${ITI_BASE}/css/intlTelInput.css`;
+        css.integrity = ITI_CSS_SRI;
+        css.crossOrigin = 'anonymous';
         document.head.appendChild(css);
 
         const js = document.createElement('script');
         js.src = `${ITI_BASE}/js/intlTelInput.min.js`;
+        js.integrity = ITI_JS_SRI;
+        js.crossOrigin = 'anonymous';
         js.onload = resolve;
         js.onerror = reject;
         document.head.appendChild(js);
@@ -623,7 +658,11 @@ if (contactForm) {
         if (!probe.getContext('webgl2') && !probe.getContext('webgl')) return;
     } catch { return; }
 
-    const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+    // Self-hosted on purpose. Dynamic import() cannot carry a subresource-integrity
+    // hash, so a CDN copy would be the one script on this page nothing can verify.
+    // Serving it from our own origin removes that trust dependency entirely —
+    // and the minified module build is roughly half the size of the CDN default.
+    const THREE_URL = new URL('vendor/three.module.min.js', document.baseURI).href;
     const accent = getComputedStyle(document.documentElement)
         .getPropertyValue('--main-color').trim() || '#00ffee';
 

@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electronics · Makara CHAN</title>
+    <!-- Only these origins may serve code to this page. This page runs no
+         JavaScript at all, so scripts are blocked outright. -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'none';
+        style-src 'self' https://unpkg.com 'unsafe-inline';
+        font-src 'self' https://unpkg.com data:;
+        img-src 'self' data:;
+        base-uri 'self';
+        object-src 'none';
+        frame-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="stylesheet" href="../style.css">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"
+          integrity="sha384-42kyIPf7HDYLkGffmxDhSx/3Z/53wGBs3nD6wEFxsbeDc7rMO6mkYbkAcpRsnMU2"
+          crossorigin="anonymous">
 </head>
 <body>
     <header class="header">

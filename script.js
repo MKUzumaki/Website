@@ -476,14 +476,11 @@ if (hireBtn && hireDropdown) {
 
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-    const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScieinKRzLGrfEvJB0etcYtCUZYgt_AF9jqAcQEIrzI0UFgZw/formResponse';
-    const FIELD_MAP = {
-        fullName: 'entry.905326345',
-        email: 'entry.677081586',
-        phone: 'entry.1756753663',
-        subject: 'entry.294419669',
-        message: 'entry.873234177',
-    };
+    // Apps Script web app, not the Google Form it replaced. Google Forms never
+    // sends CORS headers, so posting to it required mode:'no-cors' — an opaque
+    // response the page cannot read, which is why this form used to report
+    // success even when nothing arrived. This endpoint returns real JSON.
+    const CONTACT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzxO1n5w0-IuL94NWsSOBewR143iSFy5XyRcdnr-U16rtsi-_c3whzwSvvf-35vCZVzSQ/exec';
     const submitBtn = contactForm.querySelector('input[type="submit"]');
     const originalBtnValue = submitBtn ? submitBtn.value : 'Send Message';
 
@@ -630,27 +627,32 @@ if (contactForm) {
             return;
         }
 
-        const body = new URLSearchParams();
-        for (const [key, entryId] of Object.entries(FIELD_MAP)) {
-            if (values[key]) body.append(entryId, values[key]);
-        }
-
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.value = 'Sending...';
         }
 
         try {
-            await fetch(GOOGLE_FORM_ACTION, {
+            // Content-Type stays text/plain so this counts as a "simple" request.
+            // Anything else triggers a CORS preflight, and Apps Script has no
+            // OPTIONS handler to answer it with.
+            const res = await fetch(CONTACT_ENDPOINT, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body.toString(),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ ...values, _gotcha: data.get('_gotcha') || '' }),
             });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+
+            const result = await res.json();
+            if (!result.ok) throw new Error(result.error || 'rejected');
+
             if (submitBtn) submitBtn.value = 'Message Sent!';
             contactForm.reset();
         } catch (err) {
+            // Only reached when the message genuinely did not get through.
+            console.error('Contact form: ' + err.message);
             if (submitBtn) submitBtn.value = 'Error — try again';
+            alert('Sorry, your message could not be sent. Please email me directly at makara.chan3@gmail.com.');
         } finally {
             setTimeout(() => {
                 if (submitBtn) {

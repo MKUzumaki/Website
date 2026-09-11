@@ -1,3 +1,22 @@
+/* ==========================================================================
+   FRAME GUARD
+   GitHub Pages cannot set response headers, and frame-ancestors is ignored
+   inside a <meta> CSP — so neither X-Frame-Options nor CSP can stop this page
+   being embedded in someone else's iframe. Script is the only lever left.
+
+   It is not airtight: an attacker can add sandbox="allow-scripts" to block the
+   navigation below. So if breaking out fails, the page hides itself instead,
+   which is the outcome a clickjacker least wants.
+   ========================================================================== */
+(() => {
+    if (window.self === window.top) return;
+    try {
+        window.top.location = window.self.location;
+    } catch (err) {
+        document.documentElement.style.display = 'none';
+    }
+})();
+
 (() => {
     const el = document.querySelector('.journey-slider');
     if (!el || typeof Swiper === 'undefined') return;
@@ -544,7 +563,11 @@ if (contactForm) {
             initialCountry: 'fr',
             preferredCountries: ['fr', 'kh', 'us', 'gb'],
             separateDialCode: true,
-            loadUtilsOnInit: `${ITI_BASE}/js/utils.js`,
+            // Self-hosted. The library pulls this ~260 KB module in by dynamic
+            // import(), which cannot carry a subresource-integrity hash — so a
+            // CDN copy would have been the one script on this page nothing
+            // could verify, right next to the contact form.
+            loadUtilsOnInit: new URL('vendor/iti-utils.js', document.baseURI).href,
             strictMode: true,
         });
         // Wrapping the input in .iti can drop focus; hand it back if we took it.

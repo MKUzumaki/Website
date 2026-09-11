@@ -495,11 +495,13 @@ if (hireBtn && hireDropdown) {
 
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-    // Apps Script web app, not the Google Form it replaced. Google Forms never
-    // sends CORS headers, so posting to it required mode:'no-cors' — an opaque
-    // response the page cannot read, which is why this form used to report
-    // success even when nothing arrived. This endpoint returns real JSON.
-    const CONTACT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzxO1n5w0-IuL94NWsSOBewR143iSFy5XyRcdnr-U16rtsi-_c3whzwSvvf-35vCZVzSQ/exec';
+    // A Cloudflare Worker, which verifies a Turnstile token and only then
+    // forwards to the Apps Script backend. Posting to Apps Script directly was
+    // a denial-of-service risk: rejecting a request there still spends the
+    // account's fixed daily execution quota, so junk traffic could exhaust it
+    // and take the form down for real visitors. Filtering happens at the edge
+    // now, and the backend only ever runs for traffic that already passed.
+    const CONTACT_ENDPOINT = 'https://portfolio-contact.makara-chan3.workers.dev';
     const submitBtn = contactForm.querySelector('input[type="submit"]');
     const originalBtnValue = submitBtn ? submitBtn.value : 'Send Message';
 
@@ -650,19 +652,35 @@ if (contactForm) {
             return;
         }
 
+        // Turnstile usually solves itself while the visitor is still typing, so
+        // this is normally already waiting. If the script was blocked outright,
+        // say so plainly rather than failing at the Worker with a vague error.
+        if (typeof turnstile === 'undefined') {
+            alert('The security check could not load — an ad blocker or network filter may be blocking it. Please email me directly at makara.chan3@gmail.com.');
+            return;
+        }
+        const turnstileToken = turnstile.getResponse();
+        if (!turnstileToken) {
+            alert('The security check is still running. Please wait a moment and press Send again.');
+            return;
+        }
+
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.value = 'Sending...';
         }
 
         try {
-            // Content-Type stays text/plain so this counts as a "simple" request.
-            // Anything else triggers a CORS preflight, and Apps Script has no
-            // OPTIONS handler to answer it with.
+            // Content-Type stays text/plain so this counts as a "simple" request
+            // and skips the CORS preflight entirely.
             const res = await fetch(CONTACT_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ ...values, _gotcha: data.get('_gotcha') || '' }),
+                body: JSON.stringify({
+                    ...values,
+                    _gotcha: data.get('_gotcha') || '',
+                    turnstileToken,
+                }),
             });
             if (!res.ok) throw new Error('HTTP ' + res.status);
 
@@ -677,6 +695,9 @@ if (contactForm) {
             if (submitBtn) submitBtn.value = 'Error — try again';
             alert('Sorry, your message could not be sent. Please email me directly at makara.chan3@gmail.com.');
         } finally {
+            // A token is single-use. Without a reset the visitor cannot send a
+            // second message, successful or not, without reloading the page.
+            try { turnstile.reset(); } catch (err) { /* widget already gone */ }
             setTimeout(() => {
                 if (submitBtn) {
                     submitBtn.disabled = false;

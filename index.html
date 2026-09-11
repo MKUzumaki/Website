@@ -10,15 +10,15 @@
          allowed at all, so an injected <script> tag cannot execute. -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
-        script-src 'self' https://cdn.jsdelivr.net;
+        script-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com;
         style-src 'self' https://cdn.jsdelivr.net https://unpkg.com 'unsafe-inline';
         font-src 'self' https://unpkg.com https://cdn.jsdelivr.net data:;
         img-src 'self' https://cdn.jsdelivr.net data:;
-        connect-src 'self' https://cdn.jsdelivr.net https://script.google.com https://script.googleusercontent.com;
+        connect-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com https://portfolio-contact.makara-chan3.workers.dev;
         form-action 'self';
         base-uri 'self';
         object-src 'none';
-        frame-src 'none'">
+        frame-src https://challenges.cloudflare.com">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Warm up the CDN connections before the stylesheets below need them. -->
@@ -40,6 +40,12 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
             integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
             crossorigin="anonymous" defer></script>
+    <!-- Cloudflare Turnstile. Deliberately unversioned and unhashed: Cloudflare
+         updates this file continuously and does not support subresource
+         integrity on it, so it is the one third-party script here that cannot
+         be verified. Accepted because it is itself the bot check standing in
+         front of the contact endpoint. -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
@@ -432,6 +438,14 @@
 
             <div class="input-group-2">
                 <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+
+                <!-- Managed mode: most visitors see a tick and nothing more.
+                     The token it produces is verified server-side by the
+                     Cloudflare Worker before anything reaches the backend. -->
+                <div class="cf-turnstile"
+                     data-sitekey="0x4AAAAAAEwa88crXfm5mWUW"
+                     data-theme="dark"
+                     data-appearance="always"></div>
                 <input type="submit" value="Send Message" class="btn">
             </div>
         </form>

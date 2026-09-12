@@ -1911,3 +1911,15 @@ span{
 .certification-verify i{
     font-size: 1.6rem;
 }
+
+/*  Certification badge artwork ----------------------------------------------
+    Replaces the placeholder icons. contain, not cover: these are logos with
+    their own padding, and cropping one would cut the certification name off
+    the bottom of the badge.                                                   */
+.certification-photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1.5rem;
+    filter: drop-shadow(0 0 18px rgba(0, 255, 238, 0.25));
+}

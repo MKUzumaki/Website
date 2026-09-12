@@ -1114,6 +1114,7 @@ span{
     /* No side padding — the first card should sit flush against the edge. */
 }
 .certification-item{
+    position: relative;
     flex: 0 0 clamp(240px, 70vw, 320px);
     max-width: clamp(240px, 70vw, 320px);
     background: rgba(10, 16, 32, 0.92);
@@ -1948,4 +1949,32 @@ span{
     border-radius: 22%;
     text-shadow: none;
     box-shadow: 0 0 26px rgba(10, 102, 194, 0.55);
+}
+
+
+/*  Whole-card credential link -----------------------------------------------
+    Covers the card so anywhere on it opens the credential. Safe to do only
+    because the marquee now separates a click from a drag: a release that ends
+    a real drag is swallowed, so scrolling the strip never navigates.
+
+    The visible "Verify credential" line is a span, not a second link — one
+    interactive element per card keeps the tab order honest.                   */
+.certification-card-link{
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+}
+.certification-item:hover,
+.certification-item:focus-within{
+    border-color: var(--main-color);
+    box-shadow: 0 0 24px rgba(0, 255, 238, 0.22);
+}
+.certification-item:hover .certification-verify,
+.certification-item:focus-within .certification-verify{
+    border-bottom-color: var(--main-color);
+}
+/*  The pointer wins over the marquee's grab cursor while over a card.  */
+.certifications .wrapper .certification-card-link{
+    cursor: pointer;
 }

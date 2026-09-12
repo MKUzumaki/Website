@@ -1923,3 +1923,29 @@ span{
     padding: 1.5rem;
     filter: drop-shadow(0 0 18px rgba(0, 255, 238, 0.25));
 }
+
+/*  Issuer mark cards ---------------------------------------------------------
+    LinkedIn Learning issues no badge artwork, so these cards carry the issuer's
+    mark in its own brand colour, built from the icon font already loaded rather
+    than a downloaded logo file — nothing new to fetch, host or keep in step
+    with someone else's brand assets.
+
+    The Cisco cards look different on purpose. An examined certification and a
+    course completion are not the same thing, and the section should not imply
+    they are.                                                                  */
+.certification-photo--glyph{
+    background: linear-gradient(135deg, rgba(10, 102, 194, 0.18), rgba(255, 255, 255, 0.04));
+}
+.certification-photo--glyph i{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(8rem, 17vw, 11rem);
+    aspect-ratio: 1;
+    font-size: clamp(5rem, 11vw, 7rem);
+    color: #ffffff;
+    background: #0a66c2;
+    border-radius: 22%;
+    text-shadow: none;
+    box-shadow: 0 0 26px rgba(10, 102, 194, 0.55);
+}

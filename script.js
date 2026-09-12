@@ -287,37 +287,65 @@
         resumeTimer = setTimeout(start, RESUME_DELAY);
     };
 
-    let dragging = false;
+    let dragging = false;        // past the threshold — actually dragging
+    let pendingDrag = false;     // pointer is down, but it may still be a click
+    let movedWhileDown = false;  // suppresses the click that ends a drag
     let dragStartX = 0;
     let dragStartOffset = 0;
     let activePointer = null;
 
+    // A drag only begins once the pointer has actually travelled. Capturing on
+    // pointerdown instead redirects every later pointer event to the wrapper,
+    // so the browser never dispatches a click to the link underneath and the
+    // certification links could not be opened at all.
+    const DRAG_THRESHOLD = 5; // px
+
     wrapper.addEventListener('pointerdown', (e) => {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
-        dragging = true;
+        pendingDrag = true;
+        movedWhileDown = false;
         activePointer = e.pointerId;
         dragStartX = e.clientX;
         dragStartOffset = offset;
-        pause();
-        wrapper.classList.add('is-dragging');
-        try { wrapper.setPointerCapture(e.pointerId); } catch (_) {}
     });
 
     wrapper.addEventListener('pointermove', (e) => {
-        if (!dragging || e.pointerId !== activePointer) return;
-        offset = dragStartOffset + (e.clientX - dragStartX);
+        if (!pendingDrag || e.pointerId !== activePointer) return;
+        const dx = e.clientX - dragStartX;
+
+        if (!dragging) {
+            if (Math.abs(dx) < DRAG_THRESHOLD) return;
+            dragging = true;
+            movedWhileDown = true;
+            pause();
+            wrapper.classList.add('is-dragging');
+            try { wrapper.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        offset = dragStartOffset + dx;
         wrap();
         apply();
     });
 
     const endDrag = (e) => {
-        if (!dragging || e.pointerId !== activePointer) return;
+        if (!pendingDrag || e.pointerId !== activePointer) return;
+        if (dragging) {
+            wrapper.classList.remove('is-dragging');
+            try { wrapper.releasePointerCapture(e.pointerId); } catch (_) {}
+            queueResume();
+        }
+        pendingDrag = false;
         dragging = false;
         activePointer = null;
-        wrapper.classList.remove('is-dragging');
-        try { wrapper.releasePointerCapture(e.pointerId); } catch (_) {}
-        queueResume();
     };
+
+    // Releasing a drag on top of a link should not follow it — the visitor was
+    // scrolling the strip, not choosing a credential.
+    wrapper.addEventListener('click', (e) => {
+        if (!movedWhileDown) return;
+        e.preventDefault();
+        e.stopPropagation();
+    }, true);
     wrapper.addEventListener('pointerup', endDrag);
     wrapper.addEventListener('pointercancel', endDrag);
 

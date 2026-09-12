@@ -42,22 +42,42 @@
 
         <section class="project-hero">
             <h1 class="project-page-title">Cyber Security</h1>
-            <p class="project-page-tagline">Hardening systems and analyzing threats to keep infrastructure, data, and users safe from real-world attacks.</p>
+            <p class="project-page-tagline">Finding weaknesses in systems I am responsible for, and fixing them where the fix actually holds — not where it is easiest to apply.</p>
+
+            <p class="project-page-lead">Each entry opens a write-up of what the problem was, what I did, and what it changed.</p>
+
+            <div class="project-rows">
+                <a class="project-row" href="https://github.com/MKUzumaki/Website" target="_blank" rel="noopener noreferrer">
+                    <span class="project-row-text">
+                        <span class="project-row-title">Securing this portfolio</span>
+                        <span class="project-row-meta">Stored formula injection · quota-exhaustion DoS · unverified supply chain</span>
+                    </span>
+                    <i class="bx bx-link-external project-row-icon" aria-hidden="true"></i>
+                </a>
+
+                <!-- Not a link on purpose. The documents behind this row set out
+                     an employer's security posture and answer named customers'
+                     supplier assessments; there is no version of them that
+                     belongs on a public site. -->
+                <div class="project-row project-row--static">
+                    <span class="project-row-text">
+                        <span class="project-row-title">Security assurance documentation · SKYDOT SAS</span>
+                        <span class="project-row-meta">Authored a five-document security package — governance and risk, technical architecture and cryptography, access control and personnel, security operations and continuity, secure development and vulnerability management — and answered enterprise customers' supplier security assessments.</span>
+                    </span>
+                    <span class="project-row-note">Employer material — not published</span>
+                </div>
+
+                <!-- The tooling is mine; what it renders is not. -->
+                <div class="project-row project-row--static">
+                    <span class="project-row-text">
+                        <span class="project-row-title">Documentation build pipeline · SKYDOT SAS</span>
+                        <span class="project-row-meta">Built the Markdown to LaTeX to PDF pipeline that renders the package, with parallel builds for individual documents and a combined edition with contents.</span>
+                    </span>
+                    <span class="project-row-note">Employer material — not published</span>
+                </div>
+            </div>
         </section>
 
-        <section class="project-page-section">
-            <h2>Overview</h2>
-            <p>Add a longer description of the work, tools, and outcomes here.</p>
-        </section>
-
-        <section class="project-page-section">
-            <h2>Projects</h2>
-            <ul class="project-page-list">
-                <li>Project 1 — placeholder</li>
-                <li>Project 2 — placeholder</li>
-                <li>Project 3 — placeholder</li>
-            </ul>
-        </section>
-    </main>
+</main>
 </body>
 </html>

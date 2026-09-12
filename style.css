@@ -1888,3 +1888,26 @@ span{
     height: 1px;
     overflow: hidden;
 }
+
+/*  Credential verification link ---------------------------------------------
+    Sits inside the marquee, which is also a drag surface — so this is a small
+    explicit link rather than a whole-card overlay, which would fire on the
+    click that ends a drag.                                                    */
+.certification-verify{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--main-color);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease, opacity 0.25s ease;
+}
+.certification-verify:hover,
+.certification-verify:focus-visible{
+    border-bottom-color: var(--main-color);
+}
+.certification-verify i{
+    font-size: 1.6rem;
+}

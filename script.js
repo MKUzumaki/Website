@@ -198,6 +198,12 @@
         originals.forEach(item => {
             const clone = item.cloneNode(true);
             clone.setAttribute('aria-hidden', 'true');
+            // aria-hidden hides these from screen readers but not from the tab
+            // order, so without this a keyboard user would tab through several
+            // invisible copies of the same link before reaching the next
+            // section. Copies are decoration; only the originals are reachable.
+            clone.querySelectorAll('a, button, input, select, textarea, [tabindex]')
+                .forEach(el => el.setAttribute('tabindex', '-1'));
             track.appendChild(clone);
         });
     };
